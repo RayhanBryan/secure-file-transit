@@ -2,7 +2,7 @@
   <v-navigation-drawer
     v-if="isLoggedIn"
     v-model="drawerModel"
-    permanent
+    temporary
     app
     style="background: linear-gradient(180deg, #f0f9ff 0%, #f8fafc 100%)"
     class="border-e"

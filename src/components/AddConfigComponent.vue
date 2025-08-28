@@ -15,7 +15,7 @@
 
     <!-- Configuration Form -->
     <v-row>
-      <v-col cols="12" lg="8">
+      <v-col cols="12" sm="8">
         <v-card elevation="2" rounded="lg">
           <v-card-title class="pb-2">
             <v-icon class="text-primary mr-2">mdi-plus-box</v-icon>
@@ -109,8 +109,8 @@
                     block
                   >
                     <v-icon left>mdi-auto-fix</v-icon>
-                    <span class="d-none d-md-inline">Isi Contoh Data</span>
-                    <span class="d-md-none">Contoh</span>
+                    <span class="d-none d-lg-inline">Isi Contoh Data</span>
+                    <span class="d-lg-none">Contoh</span>
                   </v-btn>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -122,8 +122,8 @@
                     block
                   >
                     <v-icon left>mdi-refresh</v-icon>
-                    <span class="d-none d-md-inline">Reset Form</span>
-                    <span class="d-md-none">Reset</span>
+                    <span class="d-none d-lg-inline">Reset Form</span>
+                    <span class="d-lg-none">Reset</span>
                   </v-btn>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -138,14 +138,14 @@
                     <v-icon left>
                       {{ submitSuccess ? "mdi-check" : "mdi-plus" }}
                     </v-icon>
-                    <span class="d-none d-md-inline">
+                    <span class="d-none d-lg-inline">
                       {{
                         submitSuccess
                           ? "Berhasil Ditambahkan!"
                           : "Tambah Konfigurasi"
                       }}
                     </span>
-                    <span class="d-md-none">
+                    <span class="d-lg-none">
                       {{ submitSuccess ? "Sukses!" : "Tambah" }}
                     </span>
                   </v-btn>
@@ -157,7 +157,7 @@
       </v-col>
 
       <!-- Form Status -->
-      <v-col cols="12" lg="4">
+      <v-col cols="12" sm="4">
         <v-card elevation="2" rounded="lg" color="success" variant="tonal">
           <v-card-title class="pb-2">
             <v-icon class="mr-2">mdi-check-circle</v-icon>
