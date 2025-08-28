@@ -3,15 +3,15 @@
     v-if="isLoggedIn"
     :elevation="4"
     color="primary"
-    class="gradient-primary"
+    class="header-bar gradient-primary"
   >
     <v-app-bar-nav-icon
       @click="toggleDrawer"
-      color="#64748B"
+      color="rgba(255,255,255,0.9)"
     ></v-app-bar-nav-icon>
 
-    <v-app-bar-title class="font-weight-bold" style="color: #64748b">
-      <v-icon class="mr-2" color="#64748B">mdi-file-lock</v-icon>
+    <v-app-bar-title class="font-weight-bold header-title text-shadow">
+      <v-icon class="mr-2" color="rgba(255,255,255,0.9)">mdi-file-lock</v-icon>
       Secure File Transit
     </v-app-bar-title>
 
@@ -19,22 +19,12 @@
 
     <v-btn
       icon
-      @click="toggleTheme"
       class="mr-2"
       variant="text"
       size="large"
-      color="#64748B"
+      color="rgba(255,255,255,0.9)"
     >
-      <v-icon color="#64748B">{{
-        isDark ? "mdi-weather-sunny" : "mdi-weather-night"
-      }}</v-icon>
-      <v-tooltip activator="parent" location="bottom">
-        {{ isDark ? "Mode Terang" : "Mode Gelap" }}
-      </v-tooltip>
-    </v-btn>
-
-    <v-btn icon class="mr-2" variant="text" size="large" color="#64748B">
-      <v-icon color="#64748B">mdi-bell</v-icon>
+      <v-icon color="rgba(255,255,255,0.9)">mdi-bell</v-icon>
       <v-tooltip activator="parent" location="bottom"> Notifikasi </v-tooltip>
     </v-btn>
 
@@ -45,7 +35,7 @@
           v-bind="props"
           variant="text"
           size="large"
-          color="#64748B"
+          color="rgba(255,255,255,0.9)"
         ></v-btn>
       </template>
       <v-list min-width="200">
@@ -83,22 +73,15 @@ export default {
       type: Boolean,
       required: true,
     },
-    isDark: {
-      type: Boolean,
-      required: true,
-    },
     user: {
       type: Object,
       default: null,
     },
   },
-  emits: ["toggle-drawer", "toggle-theme", "logout"],
+  emits: ["toggle-drawer", "logout"],
   methods: {
     toggleDrawer() {
       this.$emit("toggle-drawer");
-    },
-    toggleTheme() {
-      this.$emit("toggle-theme");
     },
     handleLogout() {
       this.$emit("logout");
@@ -108,7 +91,13 @@ export default {
 </script>
 
 <style scoped>
-.v-app-bar {
+.header-bar {
   backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.header-title {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 </style>

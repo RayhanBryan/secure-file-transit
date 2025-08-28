@@ -12,10 +12,8 @@
     <!-- Header Component -->
     <HeaderComponent
       :is-logged-in="isLoggedIn"
-      :is-dark="isDark"
       :user="user"
       @toggle-drawer="drawer = !drawer"
-      @toggle-theme="toggleTheme"
       @logout="handleLogout"
     />
 
@@ -54,7 +52,6 @@
 </template>
 
 <script>
-import { useTheme } from "vuetify";
 import HeaderComponent from "./components/HeaderComponent.vue";
 import DrawerComponent from "./components/DrawerComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
@@ -77,9 +74,6 @@ export default {
     };
   },
   computed: {
-    isDark() {
-      return this.theme.global.name.value === "dark";
-    },
     isLoggedIn() {
       return this.user !== null;
     },
@@ -100,22 +94,16 @@ export default {
     },
   },
   created() {
-    this.theme = useTheme();
     this.loadUserData();
   },
   mounted() {
     this.loadUserData();
   },
   methods: {
-    toggleTheme() {
-      this.theme.global.name.value = this.theme.global.current.value.dark
-        ? "light"
-        : "dark";
-    },
     handleLogin(userData) {
       this.user = userData;
       localStorage.setItem("user", JSON.stringify(userData));
-      this.$router.push("/bridrive");
+      this.$router.push("/guide");
     },
     handleLogout() {
       localStorage.removeItem("user");
@@ -143,8 +131,13 @@ export default {
 </script>
 
 <style scoped>
+/* Dynamic background based on theme */
 .v-main {
-  background: #f5f7fa;
+  transition: background-color 0.3s ease;
+}
+
+:deep(.v-main) {
+  background: rgb(var(--v-theme-background)) !important;
 }
 
 /* Fade transition */

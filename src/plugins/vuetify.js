@@ -26,19 +26,6 @@ export default createVuetify({
           "on-surface": "#1E293B", // Dark slate for text
         },
       },
-      dark: {
-        colors: {
-          primary: "#0EA5E9", // Darker sky blue
-          secondary: "#6366F1", // Darker indigo
-          accent: "#10B981", // Darker emerald
-          error: "#EF4444", // Darker red
-          info: "#3B82F6", // Darker blue
-          success: "#22C55E", // Darker green
-          warning: "#F59E0B", // Darker amber
-          surface: "#1E293B",
-          background: "#0F172A",
-        },
-      },
     },
   },
   icons: {
