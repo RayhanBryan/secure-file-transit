@@ -207,24 +207,23 @@
       </v-col>
     </v-row>
 
-    <!-- Success/Error Alerts -->
-    <v-alert
-      v-if="alertMessage"
+    <!-- Floating Alert -->
+    <AlertComponent
+      :message="alertMessage"
       :type="alertType"
-      variant="tonal"
-      class="mt-4"
-      rounded="lg"
-      closable
-      @click:close="alertMessage = ''"
-    >
-      {{ alertMessage }}
-    </v-alert>
+      @close="alertMessage = ''"
+    />
   </v-container>
 </template>
 
 <script>
+import AlertComponent from "./shared/AlertComponent.vue";
+
 export default {
   name: "AddUserComponent",
+  components: {
+    AlertComponent,
+  },
   data() {
     return {
       formValid: false,

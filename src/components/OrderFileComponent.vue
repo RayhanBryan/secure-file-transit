@@ -41,12 +41,6 @@
               Order File CSV
             </v-btn>
             <!-- Success/Error Alerts -->
-            <AlertComponent
-              v-if="alertMessage && !orderSuccess"
-              :type="alertType"
-              :message="alertMessage"
-              class="mt-4"
-            />
 
             <!-- Success state with navigation button -->
             <div v-if="orderSuccess" class="mt-6">
@@ -86,6 +80,13 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <AlertComponent
+      v-if="alertMessage && !orderSuccess"
+      :type="alertType"
+      :message="alertMessage"
+      class="mt-4"
+    />
   </v-container>
 </template>
 

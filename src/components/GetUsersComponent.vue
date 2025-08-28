@@ -15,7 +15,7 @@
 
     <!-- Search and Filter -->
     <v-row>
-      <v-col cols="8" md="8">
+      <v-col cols="12" md="8">
         <v-text-field
           v-model="searchQuery"
           label="Cari pengguna..."
@@ -26,7 +26,7 @@
           @input="searchUsers"
         ></v-text-field>
       </v-col>
-      <v-col cols="4" md="4">
+      <v-col cols="12" md="4">
         <v-btn
           color="blue-darken-2"
           variant="outlined"
@@ -321,5 +321,9 @@ export default {
 
 .text-shadow {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.v-input__details) {
+  display: none;
 }
 </style>

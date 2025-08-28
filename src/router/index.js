@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import BRIDriveComponent from "../components/BRIDriveComponent.vue";
 import LoginComponent from "../components/LoginComponent.vue";
-import DownloadCodeComponent from "../components/DownloadCodeComponent.vue";
 import GuideComponent from "../components/GuideComponent.vue";
 import AddConfigComponent from "../components/AddConfigComponent.vue";
 import GetConfigComponent from "../components/GetConfigComponent.vue";
@@ -15,29 +13,13 @@ import NotFoundComponent from "../components/NotFoundComponent.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/bridrive",
+    redirect: "/guide",
   },
   {
     path: "/login",
     name: "Login",
     component: LoginComponent,
     meta: { requiresGuest: true },
-  },
-  //   {
-  //     path: "/bridrive",
-  //     name: "BRIDrive",
-  //     component: BRIDriveComponent,
-  //     meta: { requiresAuth: true },
-  //   },
-  {
-    path: "/filemanager",
-    redirect: "/bridrive",
-  },
-  {
-    path: "/downloadcode",
-    name: "DownloadCode",
-    component: DownloadCodeComponent,
-    meta: { requiresAuth: true },
   },
   {
     path: "/guide",
@@ -109,7 +91,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isLoggedIn) {
     next("/login");
   } else if (to.meta.requiresGuest && isLoggedIn) {
-    next("/bridrive");
+    next("/guide");
   } else {
     next();
   }

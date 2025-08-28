@@ -100,11 +100,12 @@
               <v-row class="mt-6">
                 <v-col cols="12" sm="4">
                   <v-btn
-                    variant="outlined"
+                    variant="elevated"
                     size="large"
                     @click="fillSampleData"
                     :disabled="loading"
-                    color="info"
+                    color="orange"
+                    class="sample-btn"
                     block
                   >
                     <v-icon left>mdi-auto-fix</v-icon>
@@ -163,8 +164,11 @@
             Form Validation
           </v-card-title>
           <v-card-text>
-            <div class="mb-3">
-              <div class="d-flex align-center mb-2">
+            <div
+              class="mb-3"
+              :class="config.configId ? 'validation-item-success' : ''"
+            >
+              <div class="d-flex align-center">
                 <v-icon
                   :color="config.configId ? 'success' : 'grey'"
                   class="mr-2"
@@ -177,8 +181,11 @@
               </div>
             </div>
 
-            <div class="mb-3">
-              <div class="d-flex align-center mb-2">
+            <div
+              class="mb-3"
+              :class="config.region ? 'validation-item-success' : ''"
+            >
+              <div class="d-flex align-center">
                 <v-icon
                   :color="config.region ? 'success' : 'grey'"
                   class="mr-2"
@@ -189,8 +196,11 @@
               </div>
             </div>
 
-            <div class="mb-3">
-              <div class="d-flex align-center mb-2">
+            <div
+              class="mb-3"
+              :class="config.code ? 'validation-item-success' : ''"
+            >
+              <div class="d-flex align-center">
                 <v-icon :color="config.code ? 'success' : 'grey'" class="mr-2">
                   {{ config.code ? "mdi-check-circle" : "mdi-minus-circle" }}
                 </v-icon>
@@ -198,18 +208,17 @@
               </div>
             </div>
 
-            <div class="mb-4">
-              <div class="d-flex align-center mb-2">
+            <div
+              class="mb-4"
+              :class="config.sharedSecret ? 'validation-item-success' : ''"
+            >
+              <div class="d-flex align-center">
                 <v-icon
-                  :color="
-                    config.sharedSecret && config.sharedSecret.length >= 8
-                      ? 'success'
-                      : 'grey'
-                  "
+                  :color="config.sharedSecret ? 'success' : 'grey'"
                   class="mr-2"
                 >
                   {{
-                    config.sharedSecret && config.sharedSecret.length >= 8
+                    config.sharedSecret
                       ? "mdi-check-circle"
                       : "mdi-minus-circle"
                   }}
@@ -477,5 +486,55 @@ export default {
   .v-divider {
     margin: 16px 0 !important;
   }
+}
+
+/* Enhanced form validation colors */
+.v-card .v-icon.text-success {
+  color: #2e7d32 !important; /* Darker green for better contrast */
+}
+
+.v-card .font-weight-medium {
+  color: #1e293b !important; /* Darker text for field names */
+}
+
+/* Success state styling for validation items */
+.validation-item-success {
+  background-color: rgba(46, 125, 50, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-left: 4px solid #2e7d32;
+}
+
+.validation-item-success .v-icon {
+  color: #2e7d32 !important;
+}
+
+.validation-item-success .font-weight-medium {
+  color: #2e7d32 !important;
+  font-weight: 600;
+}
+
+/* Enhanced sample button styling */
+.sample-btn {
+  background: linear-gradient(45deg, #ff9800 0%, #ff5722 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.sample-btn:hover {
+  background: linear-gradient(45deg, #f57c00 0%, #e64a19 100%) !important;
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+.sample-btn:active {
+  transform: translateY(0px) !important;
+}
+
+.sample-btn .v-icon {
+  color: white !important;
 }
 </style>
