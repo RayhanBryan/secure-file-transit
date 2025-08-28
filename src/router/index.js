@@ -87,19 +87,12 @@ const routes = [
     component: GetUsersComponent,
     meta: { requiresAuth: true },
   },
-  {
-    path: "/dashboard",
-    redirect: "/bridrive",
-  },
-  {
-    path: "/about",
-    redirect: "/bridrive",
-  },
   // Catch-all route for 404 pages - must be last
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFoundComponent,
+    meta: { requiresAuth: true },
   },
 ];
 

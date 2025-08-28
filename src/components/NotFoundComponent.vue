@@ -38,15 +38,15 @@
               <!-- Suggestions -->
               <v-card
                 variant="tonal"
-                color="info"
+                color="primary"
                 class="mb-6 pa-4"
                 rounded="lg"
               >
-                <h3 class="text-h6 font-weight-medium text-info mb-3">
-                  <v-icon left color="info">mdi-lightbulb</v-icon>
+                <h3 class="text-h6 font-weight-medium text-primary mb-3">
+                  <v-icon left color="primary">mdi-lightbulb</v-icon>
                   Saran untuk Anda:
                 </h3>
-                <ul class="text-left text-info">
+                <ul class="text-left text-primary suggestion-list ms-4">
                   <li class="mb-1">Periksa kembali URL yang Anda masukkan</li>
                   <li class="mb-1">Kembali ke halaman sebelumnya</li>
                   <li class="mb-1">
@@ -95,13 +95,10 @@
 
           <!-- Additional Info -->
           <div class="text-center mt-6">
-            <v-card variant="tonal" color="warning" class="pa-4" rounded="lg">
-              <v-icon color="warning" class="mb-2">mdi-clock</v-icon>
-              <p class="text-body-2 text-warning mb-2 font-weight-medium">
+            <v-card variant="tonal" color="info" class="pa-4" rounded="lg">
+              <v-icon color="info" class="mb-2">mdi-clock</v-icon>
+              <p class="text-body-2 text-info mb-2 font-weight-medium">
                 Waktu: {{ currentTime }}
-              </p>
-              <p class="text-caption text-warning">
-                Anda akan diarahkan ke beranda dalam {{ countdown }} detik
               </p>
             </v-card>
           </div>
@@ -116,21 +113,15 @@ export default {
   name: "NotFoundComponent",
   data() {
     return {
-      countdown: 10,
       currentTime: "",
-      countdownInterval: null,
       timeInterval: null,
     };
   },
   mounted() {
     this.updateCurrentTime();
-    this.startCountdown();
     this.startTimeUpdate();
   },
   beforeUnmount() {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-    }
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
     }
@@ -163,15 +154,6 @@ Mohon bantuan untuk menyelesaikan masalah ini.`);
       window.open(
         `mailto:it-support@bri.co.id?subject=${subject}&body=${body}`
       );
-    },
-
-    startCountdown() {
-      this.countdownInterval = setInterval(() => {
-        this.countdown--;
-        if (this.countdown <= 0) {
-          this.goHome();
-        }
-      }, 1000);
     },
 
     startTimeUpdate() {
@@ -297,5 +279,21 @@ Mohon bantuan untuk menyelesaikan masalah ini.`);
   50% {
     transform: translateY(-10px);
   }
+}
+
+/* Enhanced visibility for suggestion list */
+.suggestion-list {
+  font-weight: 500;
+}
+
+.suggestion-list li {
+  color: #1565c0 !important;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.suggestion-list li:hover {
+  color: #0d47a1 !important;
+  font-weight: 600;
 }
 </style>
