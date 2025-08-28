@@ -5,10 +5,11 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-download</v-icon>
-          Download Center
+          Secure File Transit - Download Center
         </h2>
-        <p class="text-subtitle-1 text-grey-darken-1">
-          Download installer dan file konfigurasi untuk sistem BRI
+        <p class="text-subtitle-1 text-grey-darken-3">
+          Download installer dan file konfigurasi untuk sistem Secure File
+          Transit
         </p>
       </v-col>
     </v-row>
@@ -101,8 +102,10 @@
             <div
               class="icon-container mb-4 flex-grow-1 d-flex align-center justify-center"
             >
-              <v-avatar size="80" color="blue-lighten-4" class="mb-2">
-                <v-icon size="50" color="blue">mdi-microsoft-windows</v-icon>
+              <v-avatar size="80" color="primary" class="mb-2">
+                <v-icon size="50" color="on-primary"
+                  >mdi-microsoft-windows</v-icon
+                >
               </v-avatar>
             </div>
 
@@ -138,10 +141,11 @@
             <div
               class="icon-container mb-4 flex-grow-1 d-flex align-center justify-center"
             >
-              <v-avatar size="80" color="orange-lighten-4" class="mb-2">
-                <v-icon size="40" color="orange-darken-2">mdi-key</v-icon>
+              <v-avatar size="80" color="warning" class="mb-2">
+                <v-icon size="40" color="on-surface">mdi-key</v-icon>
                 <v-icon size="30" color="grey-darken-1" class="ml-1"
                   >mdi-cog</v-icon
+                >
                 >
               </v-avatar>
             </div>

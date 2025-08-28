@@ -1,7 +1,8 @@
 {
-  "name": "dashboard-cabang",
+  "name": "secure-file-transit",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Portal Secure File Transit - BRI Management System untuk keamanan transmisi file",
   "type": "module",
   "scripts": {
     "dev": "vite",

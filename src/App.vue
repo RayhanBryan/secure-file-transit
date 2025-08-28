@@ -5,6 +5,7 @@
       :is-logged-in="isLoggedIn"
       :drawer="drawer"
       :rail="rail"
+      :user-menus="userMenus"
       @update:drawer="drawer = $event"
     />
 
@@ -81,6 +82,13 @@ export default {
     },
     isLoggedIn() {
       return this.user !== null;
+    },
+    userMenus() {
+      // Ensure we always return an array, never null or undefined
+      if (!this.user || !Array.isArray(this.user.menus)) {
+        return [];
+      }
+      return this.user.menus;
     },
   },
   watch: {

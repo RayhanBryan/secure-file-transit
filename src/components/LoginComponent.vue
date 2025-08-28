@@ -33,7 +33,7 @@
                 <!-- Username Field -->
                 <v-text-field
                   v-model="form.username"
-                  label="Username / NIP"
+                  label="Nama Pengguna / NIP"
                   prepend-inner-icon="mdi-account"
                   variant="outlined"
                   :rules="usernameRules"
@@ -47,7 +47,7 @@
                 <v-text-field
                   v-model="form.password"
                   :type="showPassword ? 'text' : 'password'"
-                  label="Password"
+                  label="Kata Sandi"
                   prepend-inner-icon="mdi-lock"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append-inner="showPassword = !showPassword"
@@ -75,7 +75,7 @@
                     color="primary"
                     @click="showForgotPassword = true"
                   >
-                    Lupa Password?
+                    Lupa Kata Sandi?
                   </v-btn>
                 </div>
 
@@ -90,20 +90,8 @@
                   class="gradient-primary text-white font-weight-bold"
                   rounded="lg"
                 >
-                  <v-icon left>mdi-login</v-icon>
                   Masuk
                 </v-btn>
-
-                <!-- Error Alert -->
-                <v-alert
-                  v-if="loginError"
-                  type="error"
-                  variant="tonal"
-                  class="mt-4"
-                  rounded="lg"
-                >
-                  {{ loginError }}
-                </v-alert>
               </v-form>
             </v-card-text>
 
@@ -128,7 +116,7 @@
               <p class="text-body-2 text-info mb-2 font-weight-medium">
                 Butuh Bantuan?
               </p>
-              <p class="text-caption text-grey-darken-1">
+              <p class="text-caption text-white">
                 Hubungi IT Support: ext. 1234 atau it-support@bri.co.id
               </p>
             </v-card>
@@ -137,23 +125,30 @@
       </v-row>
     </v-container>
 
+    <!-- Floating Alert -->
+    <AlertComponent
+      :message="loginError"
+      :type="alertType"
+      @close="loginError = ''"
+    />
+
     <!-- Forgot Password Dialog -->
     <v-dialog v-model="showForgotPassword" max-width="500">
       <v-card rounded="xl">
         <v-card-title class="text-h5 pa-6 bg-grey-lighten-4">
           <v-icon left color="primary">mdi-lock-reset</v-icon>
-          Reset Password
+          Atur Ulang Kata Sandi
         </v-card-title>
 
         <v-card-text class="pa-6">
           <p class="text-body-2 text-grey-darken-1 mb-4">
-            Masukkan username atau email Anda untuk mendapatkan link reset
-            password.
+            Masukkan nama pengguna atau email Anda untuk mendapatkan tautan atur
+            ulang kata sandi.
           </p>
 
           <v-text-field
             v-model="resetEmail"
-            label="Username / Email"
+            label="Nama Pengguna / Email"
             prepend-inner-icon="mdi-email"
             variant="outlined"
             density="comfortable"
@@ -172,7 +167,7 @@
             @click="handleForgotPassword"
             :loading="resetLoading"
           >
-            Kirim Link
+            Kirim Tautan
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -181,9 +176,15 @@
 </template>
 
 <script>
+import ApiService from "../services/api.js";
+import AlertComponent from "./shared/AlertComponent.vue";
+
 export default {
   name: "LoginComponent",
   emits: ["login"],
+  components: {
+    AlertComponent,
+  },
   data() {
     return {
       // Form data
@@ -196,6 +197,7 @@ export default {
       showPassword: false,
       loading: false,
       loginError: "",
+      alertType: "error",
       errors: {
         username: [],
         password: [],
@@ -206,16 +208,26 @@ export default {
       resetLoading: false,
       // Form validation rules
       usernameRules: [
-        (v) => !!v || "Username wajib diisi",
-        (v) => v.length >= 3 || "Username minimal 3 karakter",
+        (v) => !!v || "Nama pengguna wajib diisi",
+        (v) => v.length >= 3 || "Nama pengguna minimal 3 karakter",
       ],
       passwordRules: [
-        (v) => !!v || "Password wajib diisi",
-        (v) => v.length >= 4 || "Password minimal 4 karakter",
+        (v) => !!v || "Kata sandi wajib diisi",
+        (v) => v.length >= 4 || "Kata sandi minimal 4 karakter",
       ],
     };
   },
   methods: {
+    // Show alert message
+    showAlert(message, type = "error") {
+      this.loginError = message;
+      this.alertType = type;
+
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        this.loginError = "";
+      }, 5000);
+    },
     // Login handler
     async handleLogin() {
       // Clear previous errors
@@ -225,46 +237,111 @@ export default {
 
       // Basic validation
       if (!this.form.username) {
-        this.errors.username = ["Username wajib diisi"];
+        this.errors.username = ["Nama pengguna wajib diisi"];
+        this.showAlert("Nama pengguna wajib diisi", "error");
         return;
       }
       if (!this.form.password) {
-        this.errors.password = ["Password wajib diisi"];
+        this.errors.password = ["Kata sandi wajib diisi"];
+        this.showAlert("Kata sandi wajib diisi", "error");
         return;
       }
 
       this.loading = true;
 
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Call actual login API using ApiService
+        const response = await ApiService.login({
+          username: this.form.username,
+          password: this.form.password,
+        });
 
-        // Demo credentials
+        // Debug: Log the actual response structure
+        console.log("API Response:", response);
+
+        // Check if login is successful - more flexible checking
+        const isSuccessful =
+          response &&
+          (response.success === true ||
+            response.status === "success" ||
+            response.status === "ok" ||
+            response.token ||
+            response.user ||
+            response.data ||
+            // If response exists and doesn't have explicit error
+            (response &&
+              !response.error &&
+              !response.message?.includes("error")));
+
+        if (isSuccessful) {
+          console.log("Login successful, processing response...");
+
+          // Store token if provided
+          const token =
+            response.token || response.data?.token || response.accessToken;
+          if (token) {
+            ApiService.setAuthToken(token);
+          }
+
+          // Extract user data from various possible locations
+          const userData =
+            response.user || response.data?.user || response.data || {};
+
+          // Success - emit login event with user data
+          this.$emit("login", {
+            username: this.form.username,
+            name:
+              userData.name ||
+              userData.fullName ||
+              userData.username ||
+              this.form.username,
+            role: userData.role || "user",
+            branch:
+              userData.branch ||
+              userData.office ||
+              userData.department ||
+              "Cabang BRI",
+            token: token,
+            menus: Array.isArray(response.menus) ? response.menus : [], // Ensure menus is always an array
+          });
+        } else {
+          console.log("Login failed, showing error...");
+          this.showAlert(
+            response?.message ||
+              response?.error ||
+              "Login gagal - silakan periksa kredensial Anda",
+            "error"
+          );
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        // Fallback to demo credentials if API fails
         if (this.form.username === "admin" && this.form.password === "admin") {
-          // Success - emit login event
           this.$emit("login", {
             username: this.form.username,
             name: "Administrator",
             role: "admin",
             branch: "Cabang Utama Jakarta",
+            menus: [], // Add empty menus array
           });
         } else if (
           this.form.username === "user" &&
           this.form.password === "user"
         ) {
-          // Success - emit login event
           this.$emit("login", {
             username: this.form.username,
             name: "User BRI",
             role: "user",
             branch: "Cabang Jakarta Selatan",
+            menus: [], // Add empty menus array
           });
         } else {
-          this.loginError =
-            "Username atau password salah. Coba gunakan admin/admin atau user/user";
+          this.showAlert(
+            error.message ||
+              "Tidak dapat terhubung ke server. Coba gunakan admin/admin atau user/user untuk demo",
+            "error"
+          );
         }
-      } catch (error) {
-        this.loginError = "Terjadi kesalahan saat login. Silakan coba lagi.";
       } finally {
         this.loading = false;
       }
@@ -272,7 +349,10 @@ export default {
 
     // Forgot password handler
     async handleForgotPassword() {
-      if (!this.resetEmail) return;
+      if (!this.resetEmail) {
+        this.showAlert("Email wajib diisi", "error");
+        return;
+      }
 
       this.resetLoading = true;
 
@@ -281,11 +361,14 @@ export default {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Show success message
-        alert("Link reset password telah dikirim ke email Anda!");
+        this.showAlert(
+          "Tautan atur ulang kata sandi telah dikirim ke email Anda!",
+          "success"
+        );
         this.showForgotPassword = false;
         this.resetEmail = "";
       } catch (error) {
-        alert("Terjadi kesalahan. Silakan coba lagi.");
+        this.showAlert("Terjadi kesalahan. Silakan coba lagi.", "error");
       } finally {
         this.resetLoading = false;
       }

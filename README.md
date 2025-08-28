@@ -1,6 +1,6 @@
-# Dashboard Cabang BRI
+# Secure File Transit - Dashboard Cabang BRI
 
-Aplikasi Vue 3 modern untuk manajemen dashboard cabang Bank BRI dengan sistem BRIDrive dan Download Center, dibangun menggunakan Vite dan Vuetify 3.
+Aplikasi Vue 3 modern untuk Portal Secure File Transit dengan sistem BRIDrive dan Download Center, dibangun menggunakan Vite dan Vuetify 3 untuk manajemen keamanan transmisi file.
 
 ## 🚀 Teknologi yang Digunakan
 
@@ -67,10 +67,11 @@ src/
 
 ## ✨ Fitur
 
-### 🏦 BRIDrive File Management
+### 🏦 Secure File Transit System
 
-- 📁 **File Management System** - Manajemen file untuk Cabang BRI Pejaten
-- 🔗 **URL Folder BRIDrive** - Akses cepat ke Google Drive folder
+- 🔐 **Secure File Management** - Portal middleware untuk keamanan transmisi file
+- 📁 **File Management System** - Manajemen file terenkripsi untuk Cabang BRI Pejaten
+- 🔗 **URL Folder BRIDrive** - Akses cepat ke Google Drive folder terenkripsi
 - 📋 **Copy to Clipboard** - Copy URL dengan satu klik
 - 🔍 **File Search** - Pencarian file dengan real-time filtering
 - 📊 **File Grid View** - Tampilan grid yang responsive untuk daftar file
@@ -168,4 +169,4 @@ Project ini menggunakan license MIT.
 
 ## 🏢 Developer
 
-Developed by BRI IT Team untuk keperluan manajemen dashboard cabang.
+Developed by BRI IT Team untuk keperluan Portal Secure File Transit pada manajemen cabang.

@@ -3,27 +3,38 @@
     v-if="isLoggedIn"
     :elevation="4"
     color="primary"
-    dark
     class="gradient-primary"
   >
-    <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon
+      @click="toggleDrawer"
+      color="#64748B"
+    ></v-app-bar-nav-icon>
 
-    <v-app-bar-title class="font-weight-bold text-shadow">
-      <v-icon class="mr-2" size="large">mdi-folder-multiple</v-icon>
-      File Manager BRI
+    <v-app-bar-title class="font-weight-bold" style="color: #64748b">
+      <v-icon class="mr-2" color="#64748B">mdi-file-lock</v-icon>
+      Secure File Transit
     </v-app-bar-title>
 
     <v-spacer></v-spacer>
 
-    <v-btn icon @click="toggleTheme" class="mr-2" variant="text" size="large">
-      <v-icon>{{ isDark ? "mdi-weather-sunny" : "mdi-weather-night" }}</v-icon>
+    <v-btn
+      icon
+      @click="toggleTheme"
+      class="mr-2"
+      variant="text"
+      size="large"
+      color="#64748B"
+    >
+      <v-icon color="#64748B">{{
+        isDark ? "mdi-weather-sunny" : "mdi-weather-night"
+      }}</v-icon>
       <v-tooltip activator="parent" location="bottom">
         {{ isDark ? "Mode Terang" : "Mode Gelap" }}
       </v-tooltip>
     </v-btn>
 
-    <v-btn icon class="mr-2" variant="text" size="large">
-      <v-icon>mdi-bell</v-icon>
+    <v-btn icon class="mr-2" variant="text" size="large" color="#64748B">
+      <v-icon color="#64748B">mdi-bell</v-icon>
       <v-tooltip activator="parent" location="bottom"> Notifikasi </v-tooltip>
     </v-btn>
 
@@ -34,6 +45,7 @@
           v-bind="props"
           variant="text"
           size="large"
+          color="#64748B"
         ></v-btn>
       </template>
       <v-list min-width="200">

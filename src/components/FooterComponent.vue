@@ -10,7 +10,7 @@
       class="text-white text-shadow d-flex align-center justify-center w-100"
     >
       <v-icon class="mr-2">mdi-copyright</v-icon>
-      {{ new Date().getFullYear() }} - Dashboard Cabang BRI.
+      {{ new Date().getFullYear() }} - Sistem Transit File Aman BRI.
     </div>
   </v-footer>
 </template>

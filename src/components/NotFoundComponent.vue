@@ -1,0 +1,301 @@
+<template>
+  <div class="not-found-page">
+    <v-container fluid class="fill-height">
+      <v-row class="fill-height" align="center" justify="center">
+        <v-col cols="12" sm="8" md="6" lg="4">
+          <!-- 404 Card -->
+          <v-card elevation="12" class="mx-auto not-found-card" rounded="xl">
+            <!-- Header Section -->
+            <div class="gradient-primary text-center pa-8">
+              <div class="error-number mb-4">
+                <span class="text-h1 font-weight-bold text-white">404</span>
+              </div>
+              <h1 class="text-h4 font-weight-bold text-white text-shadow mb-2">
+                Halaman Tidak Ditemukan
+              </h1>
+              <p class="text-subtitle-1 text-white text-shadow opacity-90">
+                Maaf, halaman yang Anda cari tidak dapat ditemukan
+              </p>
+            </div>
+
+            <!-- Content Section -->
+            <v-card-text class="pa-8 text-center">
+              <v-avatar size="120" class="mb-6" color="grey-lighten-4">
+                <v-icon size="80" color="grey-darken-2"
+                  >mdi-map-marker-question</v-icon
+                >
+              </v-avatar>
+
+              <h2 class="text-h5 font-weight-bold text-primary mb-4">
+                Ups! Sepertinya Anda Tersesat
+              </h2>
+
+              <p class="text-body-1 text-grey-darken-1 mb-6">
+                Halaman yang Anda cari mungkin telah dipindahkan, dihapus, atau
+                URL yang Anda masukkan salah.
+              </p>
+
+              <!-- Suggestions -->
+              <v-card
+                variant="tonal"
+                color="info"
+                class="mb-6 pa-4"
+                rounded="lg"
+              >
+                <h3 class="text-h6 font-weight-medium text-info mb-3">
+                  <v-icon left color="info">mdi-lightbulb</v-icon>
+                  Saran untuk Anda:
+                </h3>
+                <ul class="text-left text-info">
+                  <li class="mb-1">Periksa kembali URL yang Anda masukkan</li>
+                  <li class="mb-1">Kembali ke halaman sebelumnya</li>
+                  <li class="mb-1">
+                    Gunakan menu navigasi untuk mencari halaman
+                  </li>
+                  <li>Hubungi administrator jika masalah berlanjut</li>
+                </ul>
+              </v-card>
+
+              <!-- Action Buttons -->
+              <div class="d-flex flex-column flex-sm-row gap-3 justify-center">
+                <v-btn
+                  color="grey-darken-2"
+                  variant="outlined"
+                  size="large"
+                  @click="goBack"
+                  class="px-8"
+                  rounded="lg"
+                >
+                  <v-icon left>mdi-arrow-left</v-icon>
+                  Halaman Sebelumnya
+                </v-btn>
+              </div>
+            </v-card-text>
+
+            <!-- Footer -->
+            <v-card-actions class="px-8 pb-8">
+              <div class="w-100 text-center">
+                <v-divider class="mb-4"></v-divider>
+                <p class="text-caption text-grey-darken-1">
+                  Jika Anda yakin halaman ini seharusnya ada, silakan hubungi
+                  tim support
+                </p>
+                <v-btn
+                  variant="text"
+                  size="small"
+                  color="primary"
+                  @click="reportProblem"
+                >
+                  <v-icon left size="small">mdi-bug</v-icon>
+                  Laporkan Masalah
+                </v-btn>
+              </div>
+            </v-card-actions>
+          </v-card>
+
+          <!-- Additional Info -->
+          <div class="text-center mt-6">
+            <v-card variant="tonal" color="warning" class="pa-4" rounded="lg">
+              <v-icon color="warning" class="mb-2">mdi-clock</v-icon>
+              <p class="text-body-2 text-warning mb-2 font-weight-medium">
+                Waktu: {{ currentTime }}
+              </p>
+              <p class="text-caption text-warning">
+                Anda akan diarahkan ke beranda dalam {{ countdown }} detik
+              </p>
+            </v-card>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "NotFoundComponent",
+  data() {
+    return {
+      countdown: 10,
+      currentTime: "",
+      countdownInterval: null,
+      timeInterval: null,
+    };
+  },
+  mounted() {
+    this.updateCurrentTime();
+    this.startCountdown();
+    this.startTimeUpdate();
+  },
+  beforeUnmount() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+  },
+  methods: {
+    goHome() {
+      this.$router.push("/");
+    },
+
+    goBack() {
+      if (window.history.length > 1) {
+        this.$router.go(-1);
+      } else {
+        this.goHome();
+      }
+    },
+
+    reportProblem() {
+      // You can customize this to open a support ticket or email
+      const subject = encodeURIComponent("Masalah Halaman 404 - Dashboard BRI");
+      const body =
+        encodeURIComponent(`Saya mengalami masalah dengan halaman yang tidak ditemukan.
+      
+URL yang diakses: ${window.location.href}
+Waktu: ${new Date().toLocaleString("id-ID")}
+Browser: ${navigator.userAgent}
+
+Mohon bantuan untuk menyelesaikan masalah ini.`);
+
+      window.open(
+        `mailto:it-support@bri.co.id?subject=${subject}&body=${body}`
+      );
+    },
+
+    startCountdown() {
+      this.countdownInterval = setInterval(() => {
+        this.countdown--;
+        if (this.countdown <= 0) {
+          this.goHome();
+        }
+      }, 1000);
+    },
+
+    startTimeUpdate() {
+      this.timeInterval = setInterval(() => {
+        this.updateCurrentTime();
+      }, 1000);
+    },
+
+    updateCurrentTime() {
+      const now = new Date();
+      this.currentTime = now.toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.not-found-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+.not-found-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.not-found-card {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.fill-height {
+  min-height: 100vh;
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+}
+
+.error-number {
+  position: relative;
+}
+
+.error-number::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.gap-3 {
+  gap: 12px;
+}
+
+/* Button hover effects */
+.v-btn {
+  transition: all 0.3s ease;
+}
+
+.v-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .not-found-card {
+    margin: 16px;
+  }
+
+  .error-number .text-h1 {
+    font-size: 4rem !important;
+  }
+
+  .d-flex.flex-column.flex-sm-row {
+    flex-direction: column;
+  }
+
+  .d-flex.flex-column.flex-sm-row .v-btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+/* Animation for the avatar */
+.v-avatar {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+</style>
