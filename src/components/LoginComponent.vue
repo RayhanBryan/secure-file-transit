@@ -1,131 +1,97 @@
 <template>
   <div class="login-page">
-    <v-container fluid class="fill-height">
-      <v-row class="fill-height" align="center" justify="center">
-        <v-col cols="12" sm="8" md="6" lg="4" xl="3">
-          <!-- Login Card -->
-          <v-card elevation="12" class="mx-auto login-card" rounded="xl">
-            <!-- Header Section -->
-            <div class="gradient-primary text-center pa-8">
-              <v-avatar size="80" class="mb-4" color="white">
-                <v-icon size="50" color="primary">mdi-bank</v-icon>
-              </v-avatar>
-              <h1 class="text-h4 font-weight-bold text-white text-shadow mb-2">
-                Dashboard BRI
-              </h1>
-              <p class="text-subtitle-1 text-white text-shadow opacity-90">
-                Sistem Manajemen Cabang
-              </p>
+    <v-container fluid class="pa-0 fill-height" style="min-height: 100vh">
+      <v-row class="ma-0 fill-height" style="min-height: 100vh">
+        <!-- Left Side - Branding -->
+        <v-col cols="12" md="7" lg="8" class="left-panel d-none d-md-flex">
+          <div class="branding-container">
+            <div class="brand-header">
+              <v-icon size="32" color="white" class="mr-2">mdi-bank</v-icon>
+              <span class="brand-text">Secure File Transit</span>
             </div>
 
+            <div class="welcome-content">
+              <h1 class="welcome-title">Selamat Datang</h1>
+              <p class="welcome-subtitle">Sistem Keamanan Transfer File</p>
+            </div>
+
+            <div class="bottom-text">
+              <span class="secure-text">Secure • Reliable • Trusted</span>
+            </div>
+          </div>
+        </v-col>
+
+        <!-- Right Side - Login Form -->
+        <v-col
+          cols="12"
+          md="5"
+          lg="4"
+          class="right-panel d-flex align-center justify-center"
+        >
+          <div class="login-form-container">
             <!-- Login Form -->
-            <v-card-text class="pa-8">
+            <div class="form-content">
+              <div class="form-title-section">
+                <p class="welcome-text">Kami menjaga semuanya</p>
+                <h1 class="main-title">Login</h1>
+              </div>
+
               <v-form @submit.prevent="handleLogin" ref="loginForm">
-                <div class="text-center mb-6">
-                  <h2 class="text-h5 font-weight-bold text-primary">
-                    Masuk ke Akun Anda
-                  </h2>
-                  <p class="text-body-2 text-grey-darken-1 mt-2">
-                    Silakan masukkan kredensial untuk melanjutkan
-                  </p>
+                <!-- Email/Username Field -->
+                <div class="form-field">
+                  <v-text-field
+                    v-model="form.username"
+                    label="Nama Pengguna"
+                    variant="outlined"
+                    rounded="xl"
+                    density="comfortable"
+                    :error-messages="errors.username"
+                    hide-details="auto"
+                    class="custom-input"
+                  ></v-text-field>
                 </div>
 
-                <!-- Username Field -->
-                <v-text-field
-                  v-model="form.username"
-                  label="Nama Pengguna / NIP"
-                  prepend-inner-icon="mdi-account"
-                  variant="outlined"
-                  :rules="usernameRules"
-                  :error-messages="errors.username"
-                  class="mb-3"
-                  density="comfortable"
-                  rounded="lg"
-                ></v-text-field>
-
                 <!-- Password Field -->
-                <v-text-field
-                  v-model="form.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  label="Kata Sandi"
-                  prepend-inner-icon="mdi-lock"
-                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append-inner="showPassword = !showPassword"
-                  variant="outlined"
-                  :rules="passwordRules"
-                  :error-messages="errors.password"
-                  class="mb-4"
-                  density="comfortable"
-                  rounded="lg"
-                ></v-text-field>
-
-                <!-- Remember Me & Forgot Password -->
-                <div class="d-flex justify-space-between align-center mb-6">
-                  <v-checkbox
-                    v-model="form.remember"
-                    label="Ingat saya"
-                    density="compact"
-                    color="primary"
-                    hide-details
-                  ></v-checkbox>
-
-                  <v-btn
-                    variant="text"
-                    size="small"
-                    color="primary"
-                    @click="showForgotPassword = true"
-                  >
-                    Lupa Kata Sandi?
-                  </v-btn>
+                <div class="form-field">
+                  <v-text-field
+                    v-model="form.password"
+                    :type="showPassword ? 'text' : 'password'"
+                    label="Kata Sandi"
+                    variant="outlined"
+                    rounded="xl"
+                    density="comfortable"
+                    :error-messages="errors.password"
+                    :append-inner-icon="
+                      showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                    "
+                    @click:append-inner="showPassword = !showPassword"
+                    hide-details="auto"
+                    class="custom-input"
+                  ></v-text-field>
                 </div>
 
                 <!-- Login Button -->
-                <v-btn
-                  type="submit"
-                  color="primary"
-                  variant="elevated"
-                  size="large"
-                  block
-                  :loading="loading"
-                  class="gradient-primary text-white font-weight-bold"
-                  rounded="lg"
-                >
-                  Masuk
-                </v-btn>
+                <div class="form-field">
+                  <v-btn
+                    type="submit"
+                    block
+                    color="primary"
+                    size="large"
+                    rounded="xl"
+                    :loading="loading"
+                    class="login-btn"
+                  >
+                    Masuk
+                  </v-btn>
+                </div>
               </v-form>
-            </v-card-text>
-
-            <!-- Footer -->
-            <v-card-actions class="px-8 pb-8">
-              <div class="w-100 text-center">
-                <v-divider class="mb-4"></v-divider>
-                <p class="text-caption text-grey-darken-1">
-                  © {{ new Date().getFullYear() }} Bank Rakyat Indonesia
-                </p>
-                <p class="text-caption text-grey-darken-1">
-                  Sistem Dashboard Cabang v1.0
-                </p>
-              </div>
-            </v-card-actions>
-          </v-card>
-
-          <!-- Additional Info -->
-          <div class="text-center mt-6">
-            <v-card variant="tonal" color="info" class="pa-4" rounded="lg">
-              <v-icon color="info" class="mb-2">mdi-information</v-icon>
-              <p class="text-body-2 text-info mb-2 font-weight-medium">
-                Butuh Bantuan?
-              </p>
-              <p class="text-caption text-white">
-                Hubungi IT Support: ext. 1234 atau it-support@bri.co.id
-              </p>
-            </v-card>
+            </div>
           </div>
         </v-col>
       </v-row>
     </v-container>
 
-    <!-- Floating Alert -->
+    <!-- Alert Messages -->
     <AlertComponent
       :message="loginError"
       :type="alertType"
@@ -133,26 +99,26 @@
     />
 
     <!-- Forgot Password Dialog -->
-    <v-dialog v-model="showForgotPassword" max-width="500">
-      <v-card rounded="xl">
-        <v-card-title class="text-h5 pa-6 bg-grey-lighten-4">
+    <v-dialog v-model="showForgotPassword" max-width="400">
+      <v-card rounded="xl" elevation="8">
+        <v-card-title class="text-h6 pa-6">
           <v-icon left color="primary">mdi-lock-reset</v-icon>
           Atur Ulang Kata Sandi
         </v-card-title>
 
-        <v-card-text class="pa-6">
-          <p class="text-body-2 text-grey-darken-1 mb-4">
-            Masukkan nama pengguna atau email Anda untuk mendapatkan tautan atur
-            ulang kata sandi.
+        <v-card-text class="pa-6 pt-0">
+          <p class="text-body-2 mb-4">
+            Masukkan alamat email Anda dan kami akan mengirimkan tautan untuk
+            mengatur ulang kata sandi Anda.
           </p>
 
           <v-text-field
             v-model="resetEmail"
-            label="Nama Pengguna / Email"
-            prepend-inner-icon="mdi-email"
+            label="Alamat Email"
             variant="outlined"
-            density="comfortable"
             rounded="lg"
+            density="comfortable"
+            type="email"
           ></v-text-field>
         </v-card-text>
 
@@ -166,6 +132,7 @@
             variant="elevated"
             @click="handleForgotPassword"
             :loading="resetLoading"
+            rounded="lg"
           >
             Kirim Tautan
           </v-btn>
@@ -380,35 +347,349 @@ export default {
 <style scoped>
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 100vh;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Left Panel - Branding */
+.left-panel {
+  background: linear-gradient(135deg, #7dd3fc 0%, #a7f3d0 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.branding-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem;
   position: relative;
 }
 
-.login-page::before {
+.brand-header {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.brand-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-text {
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.secure-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Right Panel - Login Form */
+.right-panel {
+  background: white;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.form-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 3rem;
+}
+
+.sign-up-btn {
+  border-color: #e5e7eb !important;
+  color: #6b7280 !important;
+}
+
+.form-title-section {
+  margin-bottom: 2rem;
+}
+
+.welcome-text {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+  font-style: italic;
+}
+
+.main-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+}
+
+.custom-input :deep(.v-field) {
+  background: #f9fafb;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(.v-field__outline) {
+  --v-field-border-opacity: 0.1;
+}
+
+.custom-input :deep(.v-field--focused .v-field__outline) {
+  --v-field-border-opacity: 1;
+}
+
+/* Remove autofill background */
+.custom-input :deep(.v-field__input input:-webkit-autofill) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: #f9fafb !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(.v-field__input input:-webkit-autofill:hover) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  background-color: #f9fafb !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(.v-field__input input:-webkit-autofill:focus) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  background-color: #f9fafb !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(.v-field__input input:-webkit-autofill:active) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  background-color: #f9fafb !important;
+  border-radius: 2rem !important;
+}
+
+/* Additional autofill removal for all browsers */
+.custom-input :deep(input:-webkit-autofill) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: transparent !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(input:-webkit-autofill:hover) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(input:-webkit-autofill:focus) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  border-radius: 2rem !important;
+}
+
+.custom-input :deep(input:-webkit-autofill:active) {
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  border-radius: 2rem !important;
+}
+
+.login-btn {
+  height: 56px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(125, 211, 252, 0.25) !important;
+  background: linear-gradient(135deg, #7dd3fc 0%, #a7f3d0 100%) !important;
+  color: #1f2937 !important;
+}
+
+.login-btn:hover {
+  box-shadow: 0 6px 20px rgba(125, 211, 252, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.remember-checkbox :deep(.v-label) {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.forgot-link {
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+}
+
+.forgot-link:hover {
+  text-decoration: underline !important;
+}
+
+/* Responsive Design */
+@media (max-width: 960px) {
+  .right-panel {
+    padding: 1rem;
+    min-height: 100vh;
+  }
+
+  .login-form-container {
+    padding: 1rem;
+  }
+
+  .welcome-title {
+    font-size: 2.5rem;
+  }
+
+  .main-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+  }
+
+  .form-title-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .right-panel {
+    min-height: 100vh;
+    padding: 1rem;
+  }
+}
+
+/* Dialog Styling */
+:deep(.v-dialog .v-card) {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+:deep(.v-dialog .v-card-title) {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Background Pattern for Left Panel */
+.left-panel::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-  opacity: 0.3;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
 }
 
-.login-card {
-  position: relative;
+/* Smooth curve transition between panels */
+.left-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -50px;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(135deg, #7dd3fc 0%, #a7f3d0 100%);
+  border-radius: 0 0 0 100px;
   z-index: 1;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
 }
 
-.fill-height {
-  min-height: 100vh;
+@media (max-width: 960px) {
+  .left-panel::after {
+    display: none;
+  }
 }
 
-/* Custom scrollbar untuk dialog */
-:deep(.v-overlay__content) {
-  max-height: 90vh;
-  overflow-y: auto;
+/* Global autofill removal - more aggressive approach */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  background-color: transparent !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  caret-color: #1f2937 !important;
+  border-radius: 2rem !important;
+}
+
+/* Force remove autofill styles */
+.v-field__input input:-webkit-autofill,
+.v-field__input input:-webkit-autofill:hover,
+.v-field__input input:-webkit-autofill:focus,
+.v-field__input input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #f9fafb inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-radius: 2rem !important;
 }
 </style>
