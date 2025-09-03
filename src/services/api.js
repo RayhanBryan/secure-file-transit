@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = "http://20.64.178.18:8087";
+const API_BASE_URL = "http://20.64.235.232:8087";
 
 // API Service Class
 class ApiService {
