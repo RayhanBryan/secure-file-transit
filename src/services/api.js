@@ -101,6 +101,12 @@ class ApiService {
     });
   }
 
+  async getAllFileReportNames() {
+    return this.request("/file/get-all-file-report-name", {
+      method: "GET",
+    });
+  }
+
   async getFileStatus(limit = 20, offset = 0) {
     return this.request(`/file/get-status?limit=${limit}&offset=${offset}`, {
       method: "GET",
@@ -229,6 +235,7 @@ export const {
   setConfig,
   getConfig,
   getFiles,
+  getAllFileReportNames,
   getFileStatus,
   uploadFile,
   downloadFile,

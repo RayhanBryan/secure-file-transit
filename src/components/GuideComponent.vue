@@ -8,7 +8,7 @@
           Secure File Transit - Guide
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Panduan penggunaan Portal Secure File Transit untuk Cabang BRI Pejaten
+          Usage guide for Secure File Transit Portal for BRI Pejaten Branch
         </p>
       </v-col>
     </v-row>

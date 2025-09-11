@@ -5,53 +5,55 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-account-group</v-icon>
-          Daftar Pengguna
+          User List
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Kelola dan pantau daftar pengguna sistem
+          Manage and monitor system users
         </p>
       </v-col>
     </v-row>
 
-    <!-- Search and Filter -->
+    <!-- Combined Management Row: Left (List) - Right (Add User Form) -->
     <v-row>
+      <!-- Users List Section -->
       <v-col cols="12" md="8">
-        <v-text-field
-          v-model="searchQuery"
-          label="Cari pengguna..."
-          prepend-inner-icon="mdi-magnify"
-          variant="outlined"
-          density="comfortable"
-          clearable
-          @input="searchUsers"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-btn
-          color="blue-darken-2"
-          variant="outlined"
-          size="large"
-          @click="refreshUsers"
-          :loading="refreshing"
-          prepend-icon="mdi-refresh"
-          height="48px"
-        >
-          Perbarui Daftar
-        </v-btn>
-      </v-col>
-    </v-row>
+        <!-- Search & Refresh -->
+        <v-row class="mb-2">
+          <v-col cols="12" md="8">
+            <v-text-field
+              v-model="searchQuery"
+              label="Search users..."
+              prepend-inner-icon="mdi-magnify"
+              variant="outlined"
+              density="comfortable"
+              clearable
+              @input="searchUsers"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4" class="d-flex align-end">
+            <v-btn
+              color="blue-darken-2"
+              variant="outlined"
+              block
+              size="large"
+              @click="refreshUsers"
+              :loading="refreshing"
+              prepend-icon="mdi-refresh"
+              height="48px"
+            >
+              Refresh
+            </v-btn>
+          </v-col>
+        </v-row>
 
-    <!-- Users List -->
-    <v-row>
-      <v-col cols="12">
         <v-card elevation="2" rounded="lg">
-          <v-card-title class="pb-2">
-            <v-row>
-              <v-col cols="6">
-                <v-icon class="text-primary mr-2">mdi-account-group</v-icon>
-                Data Pengguna
-              </v-col>
-            </v-row>
+          <v-card-title class="pb-2 d-flex align-center">
+            <v-icon class="text-primary mr-2">mdi-account-group</v-icon>
+            <span>User Data</span>
+            <v-spacer></v-spacer>
+            <v-chip size="small" color="primary" variant="tonal">
+              {{ filteredUsers.length }} Users
+            </v-chip>
           </v-card-title>
           <v-card-text>
             <div v-if="loadingUsers" class="text-center py-8">
@@ -91,7 +93,7 @@
               :headers="headers"
               :items="filteredUsers"
               :loading="loadingUsers"
-              class="elevation-1"
+              class="elevation-1 users-table"
               :items-per-page="10"
               :search="searchQuery"
             >
@@ -145,6 +147,89 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <!-- Add User Form Section -->
+      <v-col cols="12" md="4">
+        <v-card elevation="2" rounded="lg" class="mb-4 add-user-card">
+          <v-card-title class="pb-2 d-flex align-center">
+            <v-icon class="text-primary mr-2">mdi-account-plus</v-icon>
+            <span>Tambah Pengguna</span>
+          </v-card-title>
+          <v-card-text class="pt-2">
+            <v-form ref="userForm" v-model="formValid">
+              <v-text-field
+                v-model="newUser.username"
+                label="Nama Pengguna"
+                prepend-inner-icon="mdi-account-circle"
+                variant="outlined"
+                density="comfortable"
+                :rules="usernameRules"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="newUser.password"
+                label="Kata Sandi"
+                :type="showPassword ? 'text' : 'password'"
+                prepend-inner-icon="mdi-lock"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append-inner="showPassword = !showPassword"
+                variant="outlined"
+                density="comfortable"
+                :rules="passwordRules"
+                required
+              ></v-text-field>
+              <v-select
+                v-model="newUser.configId"
+                label="Config ID"
+                :items="configOptions"
+                item-title="title"
+                item-value="value"
+                prepend-inner-icon="mdi-cog"
+                append-inner-icon="mdi-refresh"
+                @click:append-inner="fetchConfigs"
+                variant="outlined"
+                density="comfortable"
+                :loading="loadingConfigs"
+                :disabled="loadingConfigs"
+                :rules="[(v) => !!v || 'Config ID harus dipilih']"
+                required
+              ></v-select>
+              <div class="d-flex justify-end mt-2">
+                <v-btn
+                  color="grey"
+                  variant="outlined"
+                  size="large"
+                  class="me-3"
+                  @click="resetForm"
+                >
+                  <v-icon left>mdi-refresh</v-icon>
+                  Reset
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  variant="elevated"
+                  size="large"
+                  @click="addUser"
+                  :loading="saving"
+                  :disabled="!formValid"
+                >
+                  <v-icon left>mdi-account-plus</v-icon>
+                  Simpan
+                </v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+        </v-card>
+
+        <!-- Optional quick info -->
+        <v-card elevation="1" rounded="lg" variant="tonal" color="info">
+          <v-card-text class="py-4 text-caption">
+            <v-icon size="18" class="mr-1" color="info">mdi-information</v-icon>
+            Gunakan form ini untuk menambahkan user baru dan tabel di kiri untuk
+            memantau.
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
 
     <!-- Success/Error Alerts -->
@@ -157,7 +242,7 @@ import ApiService from "../services/api.js";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
-  name: "GetUsersComponent",
+  name: "Users",
   components: {
     AlertComponent,
   },
@@ -170,6 +255,24 @@ export default {
       searchQuery: "",
       alertMessage: "",
       alertType: "success",
+      // Add user form state
+      formValid: false,
+      saving: false,
+      showPassword: false,
+      loadingConfigs: false,
+      newUser: { username: "", password: "", configId: null },
+      configOptions: [],
+      usernameRules: [
+        (v) => !!v || "Username harus diisi",
+        (v) => (v && v.length >= 3) || "Username minimal 3 karakter",
+        (v) =>
+          /^[a-zA-Z0-9_]+$/.test(v) ||
+          "Username hanya boleh huruf, angka, dan underscore",
+      ],
+      passwordRules: [
+        (v) => !!v || "Password harus diisi",
+        (v) => (v && v.length >= 6) || "Password minimal 6 karakter",
+      ],
       headers: [
         { title: "", key: "avatar", sortable: false, width: "60px" },
         { title: "ID", key: "id", sortable: true, width: "80px" },
@@ -179,6 +282,34 @@ export default {
         { title: "Dibuat", key: "createdAt", sortable: true },
       ],
     };
+  },
+  async addUser() {
+    if (!this.$refs.userForm.validate()) {
+      this.showAlert("Mohon lengkapi semua field yang diperlukan", "error");
+      return;
+    }
+    this.saving = true;
+    try {
+      const userData = {
+        username: this.newUser.username,
+        password: this.newUser.password,
+        configId: this.newUser.configId,
+      };
+      // Simulate API call (replace with real API later)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      this.showAlert("User berhasil diregistrasi", "success");
+      this.resetForm();
+      // Optionally refresh list
+      this.refreshUsers();
+    } catch (e) {
+      this.showAlert("Gagal meregistrasi user", "error");
+    } finally {
+      this.saving = false;
+    }
+  },
+  resetForm() {
+    this.newUser = { username: "", password: "", configId: null };
+    this.$refs.userForm.resetValidation();
   },
   methods: {
     async fetchUsers() {
@@ -212,6 +343,44 @@ export default {
         this.showAlert("Gagal memperbarui daftar pengguna", "error");
       } finally {
         this.refreshing = false;
+      }
+    },
+
+    async fetchConfigs() {
+      this.loadingConfigs = true;
+      try {
+        console.log("Fetching configs...");
+        const response = await ApiService.getConfig();
+        console.log("Configs response:", response);
+
+        // Handle array response from API
+        const configs = Array.isArray(response)
+          ? response
+          : response.data || [];
+
+        // Transform configs to match v-select format
+        this.configOptions = configs.map((config) => ({
+          title: `Config ${config.configId} - ${
+            config.region || config.code || "No description"
+          }`,
+          value: config.configId,
+        }));
+
+        console.log(
+          "Configs loaded successfully:",
+          this.configOptions.length,
+          "items"
+        );
+
+        if (this.configOptions.length === 0) {
+          this.showAlert("Tidak ada konfigurasi yang tersedia", "warning");
+        }
+      } catch (error) {
+        console.error("Error fetching configs:", error);
+        this.showAlert("Gagal memuat daftar konfigurasi", "error");
+        this.configOptions = [];
+      } finally {
+        this.loadingConfigs = false;
       }
     },
 
@@ -304,8 +473,9 @@ export default {
     },
   },
   mounted() {
-    // Fetch initial users data
+    // Fetch initial data
     this.fetchUsers();
+    this.fetchConfigs();
   },
 };
 </script>
@@ -317,6 +487,20 @@ export default {
 
 .v-chip {
   font-size: 12px;
+}
+
+.add-user-card :deep(.v-text-field),
+.add-user-card :deep(.v-select) {
+  margin-bottom: 12px;
+}
+
+.users-table {
+  max-height: 650px;
+}
+
+.add-user-card {
+  position: sticky;
+  top: 16px;
 }
 
 .text-shadow {

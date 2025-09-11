@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginComponent from "../components/LoginComponent.vue";
 import GuideComponent from "../components/GuideComponent.vue";
-import AddConfigComponent from "../components/AddConfigComponent.vue";
 import GetConfigComponent from "../components/GetConfigComponent.vue";
 import KeyCacheComponent from "../components/KeyCacheComponent.vue";
-import AddUserComponent from "../components/AddUserComponent.vue";
-import OrderFileComponent from "../components/OrderFileComponent.vue";
+import FileManagementComponent from "../components/FileManagementComponent.vue";
 import GetStatusComponent from "../components/GetStatusComponent.vue";
 import GetUsersComponent from "../components/GetUsersComponent.vue";
 import NotFoundComponent from "../components/NotFoundComponent.vue";
@@ -28,14 +26,8 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/add-config",
-    name: "AddConfig",
-    component: AddConfigComponent,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/get-config",
-    name: "GetConfig",
+    path: "/config",
+    name: "Config",
     component: GetConfigComponent,
     meta: { requiresAuth: true },
   },
@@ -46,15 +38,9 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/add-user",
-    name: "AddUser",
-    component: AddUserComponent,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/order-file",
-    name: "OrderFile",
-    component: OrderFileComponent,
+    path: "/files",
+    name: "FileManagement",
+    component: FileManagementComponent,
     meta: { requiresAuth: true },
   },
   {
@@ -64,8 +50,8 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/get-users",
-    name: "GetUsers",
+    path: "/users",
+    name: "Users",
     component: GetUsersComponent,
     meta: { requiresAuth: true },
   },

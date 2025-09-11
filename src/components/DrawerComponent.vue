@@ -9,8 +9,8 @@
   >
     <v-list-item
       prepend-icon="mdi-transit-connection-variant"
-      :title="'Sistem Transit File Aman'"
-      :subtitle="'Sistem Manajemen BRI'"
+      :title="'Secure File Transit System'"
+      :subtitle="'BRI Management System'"
       nav
       class="px-4 py-3"
       style="color: #64748b"
@@ -32,7 +32,7 @@
 
       <v-list-item
         prepend-icon="mdi-book-open"
-        title="Panduan"
+        title="Guide"
         class="mb-1"
         rounded="lg"
         :active="$route.name === 'Guide'"
@@ -159,26 +159,12 @@ export default {
 
       const iconMap = {
         // Admin & User menus berdasarkan API endpoints
-        "Add Config": "mdi-plus-box", // /config/set
-        "add config": "mdi-plus-box",
-        "Set Config": "mdi-plus-box", // Alternative naming
-        "set config": "mdi-plus-box",
-        "Tambah Konfigurasi": "mdi-plus-box",
-        "tambah konfigurasi": "mdi-plus-box",
-
-        "Get Config": "mdi-cog-outline", // /config/get
-        "get config": "mdi-cog-outline",
-        "View Config": "mdi-cog-outline", // Alternative naming
-        "view config": "mdi-cog-outline",
-        "Lihat Konfigurasi": "mdi-cog-outline",
-        "lihat konfigurasi": "mdi-cog-outline",
-
-        "Add User": "mdi-account-plus", // /auth/register
-        "add user": "mdi-account-plus",
-        "Register User": "mdi-account-plus", // Alternative naming
-        "register user": "mdi-account-plus",
-        "Tambah Pengguna": "mdi-account-plus",
-        "tambah pengguna": "mdi-account-plus",
+        Configs: "mdi-cog-outline", // /configs
+        configs: "mdi-cog-outline",
+        Config: "mdi-cog-outline", // Alternative naming
+        config: "mdi-cog-outline",
+        Konfigurasi: "mdi-cog-outline",
+        konfigurasi: "mdi-cog-outline",
 
         "Order File": "mdi-file-download", // /file/get-csv
         "order file": "mdi-file-download",
@@ -194,8 +180,8 @@ export default {
         "Dapatkan Status": "mdi-information",
         "dapatkan status": "mdi-information",
 
-        "Get Users": "mdi-account-group", // /get-users
-        "get users": "mdi-account-group",
+        Users: "mdi-account-group", // /users
+        users: "mdi-account-group",
         "User List": "mdi-account-group", // Alternative naming
         "user list": "mdi-account-group",
         "Daftar Pengguna": "mdi-account-group",

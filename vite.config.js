@@ -6,6 +6,10 @@ import { resolve } from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vuetify({ autoImport: true })],
+  server: {
+    host: "0.0.0.0", // <-- allow external connections
+    port: 5173, // optional, to ensure it's consistent
+  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),

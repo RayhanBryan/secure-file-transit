@@ -5,147 +5,188 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-cog</v-icon>
-          Lihat Konfigurasi
+          Configuration Management
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Tampilkan konfigurasi sistem saat ini
+          Manage system configuration - view and add new configurations
         </p>
       </v-col>
     </v-row>
 
-    <!-- Main Action Card -->
-    <v-row class="justify-center">
+    <!-- Combined Management Row: Left (List) - Right (Add Config Form) -->
+    <v-row>
+      <!-- Left Column: Config List -->
       <v-col cols="12" md="8">
-        <v-card elevation="2" rounded="lg">
+        <v-card elevation="2" rounded="lg" class="h-100">
           <v-card-title class="pb-2">
             <v-icon class="text-primary mr-2">mdi-cog-outline</v-icon>
-            Konfigurasi Sistem
+            Configuration List
           </v-card-title>
-          <v-card-text class="pa-6">
-            <!-- Load Configuration Button -->
-            <div class="text-center mb-6">
+          <v-card-text class="pa-4">
+            <!-- Search and Refresh Section -->
+            <div class="d-flex mb-4 gap-2">
+              <v-text-field
+                v-model="searchQuery"
+                label="Search configuration..."
+                prepend-inner-icon="mdi-magnify"
+                variant="outlined"
+                density="compact"
+                class="flex-grow-1 me-2"
+                clearable
+                @input="searchConfigs"
+              ></v-text-field>
               <v-btn
                 color="primary"
-                variant="elevated"
-                size="large"
+                variant="outlined"
                 @click="loadConfig"
                 :loading="loading"
-                class="px-8"
-                rounded="lg"
+                density="compact"
+                height="40"
               >
-                <v-icon left>mdi-refresh</v-icon>
-                Muat Konfigurasi
+                <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </div>
 
             <!-- Configuration Display -->
-            <div v-if="configData">
-              <v-card variant="outlined" class="mb-4">
-                <v-card-title class="text-h6 bg-grey-lighten-4">
-                  <v-icon class="mr-2" color="info">mdi-information</v-icon>
-                  Detail Konfigurasi
-                </v-card-title>
-                <v-card-text class="pa-4">
-                  <!-- Search Field -->
-                  <div class="mb-4">
-                    <v-text-field
-                      v-model="searchQuery"
-                      prepend-inner-icon="mdi-magnify"
-                      label="Cari konfigurasi..."
-                      variant="outlined"
-                      density="compact"
-                      clearable
-                      hide-details
-                      class="search-field"
-                    ></v-text-field>
-                  </div>
-
-                  <v-table class="config-table">
-                    <thead>
-                      <tr class="table-header">
-                        <th
-                          class="text-left font-weight-bold text-grey-darken-4"
-                        >
-                          Config ID
-                        </th>
-                        <th
-                          class="text-left font-weight-bold text-grey-darken-4"
-                        >
-                          Region
-                        </th>
-                        <th
-                          class="text-left font-weight-bold text-grey-darken-4"
-                        >
-                          Code
-                        </th>
-                        <th
-                          class="text-left font-weight-bold text-grey-darken-4"
-                        >
-                          Shared Secret
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(config, index) in filteredConfigData"
-                        :key="index"
-                        class="table-row"
-                      >
-                        <td
-                          class="font-weight-bold text-primary config-id-cell"
-                        >
-                          {{ config.configId }}
-                        </td>
-                        <td class="text-grey-darken-4 font-weight-medium">
-                          {{ config.region }}
-                        </td>
-                        <td class="text-grey-darken-4 font-weight-medium">
-                          {{ config.code }}
-                        </td>
-                        <td class="text-grey-darken-4 font-weight-medium">
-                          {{ config.sharedSecret }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </v-table>
-
-                  <!-- No Results Message -->
-                  <div
-                    v-if="filteredConfigData.length === 0"
-                    class="text-center py-8"
+            <div v-if="configData && filteredConfigData.length > 0">
+              <v-data-table
+                :headers="configHeaders"
+                :items="filteredConfigData"
+                :loading="loading"
+                item-key="configId"
+                class="elevation-1"
+                density="compact"
+              >
+                <template v-slot:item.configId="{ item }">
+                  <v-chip
+                    v-if="item.configId"
+                    color="primary"
+                    variant="elevated"
+                    size="small"
                   >
-                    <v-icon size="48" color="grey-lighten-2" class="mb-2">
-                      mdi-magnify-remove
-                    </v-icon>
-                    <p class="text-body-2 text-grey-darken-2">
-                      Tidak ada konfigurasi yang sesuai dengan pencarian "{{
-                        searchQuery
-                      }}"
-                    </p>
-                  </div>
-                </v-card-text>
-              </v-card>
+                    {{ item.configId }}
+                  </v-chip>
+                  <span v-else class="text-grey">-</span>
+                </template>
+                <template v-slot:item.region="{ item }">
+                  <v-chip
+                    v-if="item.region"
+                    color="black"
+                    variant="tonal"
+                    size="small"
+                  >
+                    {{ item.region }}
+                  </v-chip>
+                  <span v-else class="text-grey">-</span>
+                </template>
+                <template v-slot:item.sharedSecret="{ item }">
+                  <span class="text-grey font-monospace">
+                    {{ item.sharedSecret ? "••••••••" : "-" }}
+                  </span>
+                </template>
+              </v-data-table>
             </div>
 
             <!-- Empty State -->
             <div v-else-if="!loading" class="text-center py-8">
-              <v-icon size="64" color="grey-lighten-2" class="mb-4">
-                mdi-cog-off
-              </v-icon>
-              <h3 class="text-h6 text-grey-darken-1 mb-2">
-                Belum Ada Konfigurasi
-              </h3>
-              <p class="text-body-2 text-grey-darken-2">
-                Klik tombol "Muat Konfigurasi" untuk mengambil data konfigurasi
+              <v-icon size="64" color="grey-lighten-2">mdi-cog-off</v-icon>
+              <p class="text-h6 text-grey mt-2">No configurations</p>
+              <p class="text-body-2 text-grey">
+                Please load configuration or add new configuration
+              </p>
+            </div>
+
+            <!-- Loading State -->
+            <div v-if="loading" class="text-center py-8">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+              <p class="text-body-2 text-grey mt-2">
+                Loading configurations...
               </p>
             </div>
           </v-card-text>
         </v-card>
       </v-col>
+
+      <!-- Right Column: Add Config Form -->
+      <v-col cols="12" md="4">
+        <v-card elevation="2" rounded="lg" class="mb-4 add-config-card">
+          <v-card-title class="pb-2">
+            <v-icon class="text-primary mr-2">mdi-plus-box</v-icon>
+            Add Configuration
+          </v-card-title>
+          <v-card-text class="pa-4">
+            <v-form
+              @submit.prevent="handleAddConfig"
+              ref="configForm"
+              v-model="formValid"
+            >
+              <v-text-field
+                v-model="newConfig.region"
+                label="Region"
+                prepend-inner-icon="mdi-map-marker"
+                variant="outlined"
+                density="comfortable"
+                :rules="regionRules"
+                required
+                class="mb-3"
+                hint="Region/area name"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="newConfig.code"
+                label="Code"
+                prepend-inner-icon="mdi-code-tags"
+                variant="outlined"
+                density="comfortable"
+                :rules="codeRules"
+                required
+                class="mb-3"
+                hint="Identification code"
+              ></v-text-field>
+
+              <v-row class="mt-2">
+                <v-col cols="6" md="12">
+                  <v-btn
+                    color="grey"
+                    variant="outlined"
+                    size="large"
+                    block
+                    @click="resetConfigForm"
+                  >
+                    <v-icon left>mdi-refresh</v-icon>
+                    Reset
+                  </v-btn>
+                </v-col>
+                <v-col cols="6" md="12">
+                  <v-btn
+                    color="primary"
+                    variant="elevated"
+                    size="large"
+                    block
+                    type="submit"
+                    :loading="saving"
+                    :disabled="!formValid || saving"
+                  >
+                    <v-icon left>mdi-plus</v-icon>
+                    Add Config
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
 
-    <!-- Success/Error Alerts -->
-    <AlertComponent :message="alertMessage" :type="alertType" />
+    <!-- Alert Component -->
+    <AlertComponent
+      v-if="alertMessage"
+      :message="alertMessage"
+      :type="alertType"
+    />
   </v-container>
 </template>
 
@@ -154,7 +195,7 @@ import ApiService from "@/services/api";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
-  name: "GetConfigComponent",
+  name: "Configs",
   components: {
     AlertComponent,
   },
@@ -164,8 +205,33 @@ export default {
       configData: null,
       alertMessage: "",
       alertType: "success",
-      apiUrl: `${ApiService.baseURL}/config/get-all`,
       searchQuery: "",
+      // Add config form state
+      formValid: false,
+      saving: false,
+      newConfig: {
+        region: "",
+        code: "",
+      },
+      regionRules: [
+        (v) => !!v || "Region is required",
+        (v) => (v && v.length >= 2) || "Region minimum 2 characters",
+      ],
+      codeRules: [
+        (v) => !!v || "Code is required",
+        (v) => (v && v.length >= 2) || "Code minimum 2 characters",
+      ],
+      configHeaders: [
+        { title: "Config ID", key: "configId", sortable: true, width: "120px" },
+        { title: "Region", key: "region", sortable: true },
+        { title: "Code", key: "code", sortable: true, width: "120px" },
+        {
+          title: "Shared Secret",
+          key: "sharedSecret",
+          sortable: false,
+          width: "150px",
+        },
+      ],
     };
   },
   computed: {
@@ -208,65 +274,63 @@ export default {
           this.configData = response;
         }
 
-        this.showAlert("Konfigurasi berhasil dimuat", "success");
+        this.showAlert("Configuration loaded successfully", "success");
       } catch (error) {
         console.error("Error loading config:", error);
-        this.showAlert("Gagal memuat konfigurasi", "error");
+        this.showAlert("Failed to load configuration", "error");
         this.configData = null;
       } finally {
         this.loading = false;
       }
     },
 
-    formatKey(key) {
-      // Convert camelCase or snake_case to readable format
-      return key
-        .replace(/([A-Z])/g, " $1")
-        .replace(/_/g, " ")
-        .replace(/^./, (str) => str.toUpperCase());
-    },
-
-    formatValue(value) {
-      if (value === null || value === undefined) {
-        return "Tidak diatur";
+    // Add config methods
+    async handleAddConfig() {
+      if (!this.$refs.configForm.validate()) {
+        return;
       }
-      if (typeof value === "boolean") {
-        return value ? "Ya" : "Tidak";
-      }
-      if (typeof value === "object") {
-        return JSON.stringify(value, null, 2);
-      }
-      return String(value);
-    },
 
-    exportAsJson() {
-      if (!this.configData) return;
-
-      const dataStr = JSON.stringify(this.configData, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `config_${new Date().toISOString().split("T")[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      this.showAlert("Konfigurasi berhasil diekspor sebagai JSON", "success");
-    },
-
-    async copyToClipboard() {
-      if (!this.configData) return;
-
+      this.saving = true;
       try {
-        const configText = JSON.stringify(this.configData, null, 2);
-        await navigator.clipboard.writeText(configText);
-        this.showAlert("Konfigurasi berhasil disalin ke clipboard", "success");
+        console.log("Sending config payload:", this.newConfig);
+        const response = await ApiService.setConfig(this.newConfig);
+        console.log("API Response received:", response);
+
+        if (
+          response &&
+          (response.success === true ||
+            response.status === "success" ||
+            response.message === "Configuration saved successfully" ||
+            !response.error)
+        ) {
+          this.showAlert("Configuration added successfully", "success");
+          this.resetConfigForm();
+          // Refresh config list
+          this.loadConfig();
+        } else {
+          throw new Error(response?.message || "Failed to save configuration");
+        }
       } catch (error) {
-        console.error("Error copying to clipboard:", error);
-        this.showAlert("Gagal menyalin ke clipboard", "error");
+        console.error("Error adding config:", error);
+        this.showAlert("Failed to add configuration", "error");
+      } finally {
+        this.saving = false;
       }
+    },
+
+    resetConfigForm() {
+      this.newConfig = {
+        region: "",
+        code: "",
+      };
+      if (this.$refs.configForm) {
+        this.$refs.configForm.resetValidation();
+      }
+    },
+
+    searchConfigs() {
+      // This will trigger the computed property filteredConfigData
+      // No additional logic needed as it's handled in computed
     },
 
     showAlert(message, type = "success") {
@@ -283,137 +347,21 @@ export default {
 </script>
 
 <style scoped>
-.gap-3 {
-  gap: 12px;
+/* Add config card styling */
+.add-config-card :deep(.v-text-field),
+.add-config-card :deep(.v-select) {
+  margin-bottom: 8px;
 }
 
-/* Custom styling for better readability */
-.v-card-text p {
-  color: #1e293b;
-}
-
-.v-card-title {
-  color: #1e293b !important;
-}
-
-.config-key {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1565c0 !important;
-}
-
-.config-details {
-  color: #1e293b;
-}
-
-/* Enhanced button styling */
-.enhanced-button {
-  font-weight: 600 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-  transition: all 0.3s ease !important;
-}
-
-.enhanced-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-}
-
-.button-text-enhanced {
-  color: white !important;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-/* Success button styling */
-.success-button {
-  background-color: #4caf50 !important;
-}
-
-.success-text-button {
-  color: #1b5e20 !important;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.success-icon {
-  color: #2e7d32 !important;
-}
-
-/* Info button styling */
-.info-button {
-  background-color: #2196f3 !important;
-}
-
-.info-text-button {
-  color: #0d47a1 !important;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.info-icon {
-  color: #1565c0 !important;
-}
-
-/* Configuration table styling */
-.config-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.table-header th {
-  background-color: #f8f9fa !important;
-  border-bottom: 1px solid #f0f0f0 !important;
-  padding: 16px !important;
-  font-size: 0.95rem;
-  font-weight: 700 !important;
-  color: #424242 !important;
-}
-
-.table-row {
-  transition: background-color 0.2s ease;
-}
-
-.table-row:hover {
-  background-color: #fafafa !important;
-}
-
-.table-row td {
-  padding: 16px !important;
-  border-bottom: 1px solid #f5f5f5 !important;
-  font-size: 0.9rem;
-  vertical-align: middle;
-}
-
-.config-id-cell {
-  font-size: 1rem !important;
-  color: #1565c0 !important;
-}
-
-/* Search field styling */
-.search-field {
-  max-width: 400px;
-}
-
-.search-field .v-field {
+.add-config-card :deep(.v-field) {
   border-radius: 8px;
 }
 
-/* Configuration card styling */
-.v-card[variant="tonal"] {
-  transition: all 0.3s ease;
+.add-config-card {
+  height: fit-content;
 }
 
-.v-card[variant="tonal"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Export buttons styling */
-.v-btn[variant="outlined"] {
-  transition: all 0.3s ease;
-}
-
-.v-btn[variant="outlined"]:hover {
-  transform: translateY(-1px);
+.v-data-table {
+  border-radius: 8px;
 }
 </style>

@@ -11,10 +11,10 @@
                 <span class="text-h1 font-weight-bold text-white">404</span>
               </div>
               <h1 class="text-h4 font-weight-bold text-white text-shadow mb-2">
-                Halaman Tidak Ditemukan
+                Page Not Found
               </h1>
               <p class="text-subtitle-1 text-white text-shadow opacity-90">
-                Maaf, halaman yang Anda cari tidak dapat ditemukan
+                Sorry, the page you're looking for can't be found
               </p>
             </div>
 
@@ -27,12 +27,12 @@
               </v-avatar>
 
               <h2 class="text-h5 font-weight-bold text-primary mb-4">
-                Ups! Sepertinya Anda Tersesat
+                Oops! Looks like you're lost
               </h2>
 
               <p class="text-body-1 text-grey-darken-1 mb-6">
-                Halaman yang Anda cari mungkin telah dipindahkan, dihapus, atau
-                URL yang Anda masukkan salah.
+                The page you are looking for may have been moved, deleted, or
+                the URL is incorrect.
               </p>
 
               <!-- Suggestions -->
@@ -44,15 +44,13 @@
               >
                 <h3 class="text-h6 font-weight-medium text-primary mb-3">
                   <v-icon left color="primary">mdi-lightbulb</v-icon>
-                  Saran untuk Anda:
+                  Suggestions for you:
                 </h3>
                 <ul class="text-left text-primary suggestion-list ms-4">
-                  <li class="mb-1">Periksa kembali URL yang Anda masukkan</li>
-                  <li class="mb-1">Kembali ke halaman sebelumnya</li>
-                  <li class="mb-1">
-                    Gunakan menu navigasi untuk mencari halaman
-                  </li>
-                  <li>Hubungi administrator jika masalah berlanjut</li>
+                  <li class="mb-1">Double-check the URL you entered</li>
+                  <li class="mb-1">Go back to the previous page</li>
+                  <li class="mb-1">Use the navigation menu to find a page</li>
+                  <li>Contact the administrator if the problem persists</li>
                 </ul>
               </v-card>
 
@@ -67,7 +65,7 @@
                   rounded="lg"
                 >
                   <v-icon left>mdi-arrow-left</v-icon>
-                  Halaman Sebelumnya
+                  Previous Page
                 </v-btn>
               </div>
             </v-card-text>
@@ -77,8 +75,8 @@
               <div class="w-100 text-center">
                 <v-divider class="mb-4"></v-divider>
                 <p class="text-caption text-grey-darken-1">
-                  Jika Anda yakin halaman ini seharusnya ada, silakan hubungi
-                  tim support
+                  If you believe this page should exist, please contact the
+                  support team
                 </p>
                 <v-btn
                   variant="text"
@@ -87,7 +85,7 @@
                   @click="reportProblem"
                 >
                   <v-icon left size="small">mdi-bug</v-icon>
-                  Laporkan Masalah
+                  Report an Issue
                 </v-btn>
               </div>
             </v-card-actions>
@@ -98,7 +96,7 @@
             <v-card variant="tonal" color="info" class="pa-4" rounded="lg">
               <v-icon color="info" class="mb-2">mdi-clock</v-icon>
               <p class="text-body-2 text-info mb-2 font-weight-medium">
-                Waktu: {{ currentTime }}
+                Time: {{ currentTime }}
               </p>
             </v-card>
           </div>
@@ -141,15 +139,14 @@ export default {
 
     reportProblem() {
       // You can customize this to open a support ticket or email
-      const subject = encodeURIComponent("Masalah Halaman 404 - Dashboard BRI");
-      const body =
-        encodeURIComponent(`Saya mengalami masalah dengan halaman yang tidak ditemukan.
-      
-URL yang diakses: ${window.location.href}
-Waktu: ${new Date().toLocaleString("id-ID")}
+      const subject = encodeURIComponent("404 Page Issue - BRI Dashboard");
+      const body = encodeURIComponent(`I encountered a missing page (404).
+
+Accessed URL: ${window.location.href}
+Time: ${new Date().toLocaleString("en-US")}
 Browser: ${navigator.userAgent}
 
-Mohon bantuan untuk menyelesaikan masalah ini.`);
+Please assist in resolving this issue.`);
 
       window.open(
         `mailto:it-support@bri.co.id?subject=${subject}&body=${body}`
@@ -164,7 +161,7 @@ Mohon bantuan untuk menyelesaikan masalah ini.`);
 
     updateCurrentTime() {
       const now = new Date();
-      this.currentTime = now.toLocaleString("id-ID", {
+      this.currentTime = now.toLocaleString("en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",

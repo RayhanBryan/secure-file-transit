@@ -25,7 +25,9 @@
       color="rgba(255,255,255,0.9)"
     >
       <v-icon color="rgba(255,255,255,0.9)">mdi-bell</v-icon>
-      <v-tooltip activator="parent" location="bottom"> Notifikasi </v-tooltip>
+      <v-tooltip activator="parent" location="bottom">
+        Notifications
+      </v-tooltip>
     </v-btn>
 
     <v-menu>
@@ -42,15 +44,15 @@
         <v-list-item prepend-icon="mdi-account" @click="">
           <v-list-item-title>{{ user?.name || "User" }}</v-list-item-title>
           <v-list-item-subtitle>{{
-            user?.branch || "Cabang"
+            user?.branch || "Branch"
           }}</v-list-item-subtitle>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item prepend-icon="mdi-account-edit" @click="">
-          <v-list-item-title>Edit Profil</v-list-item-title>
+          <v-list-item-title>Edit Profile</v-list-item-title>
         </v-list-item>
         <v-list-item prepend-icon="mdi-cog" @click="">
-          <v-list-item-title>Pengaturan</v-list-item-title>
+          <v-list-item-title>Settings</v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item
@@ -58,7 +60,7 @@
           @click="handleLogout"
           class="text-red"
         >
-          <v-list-item-title>Keluar</v-list-item-title>
+          <v-list-item-title>Logout</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>

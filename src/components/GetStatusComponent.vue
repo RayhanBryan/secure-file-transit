@@ -5,10 +5,10 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-chart-line</v-icon>
-          Dasbor Status
+          Status Dashboard
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Pantau status sistem dan aktivitas secara real-time
+          Monitor system status and activity in real time
         </p>
       </v-col>
     </v-row>
@@ -25,7 +25,7 @@
           width="100%"
         >
           <v-icon left>mdi-refresh</v-icon>
-          Perbarui Status
+          Refresh Status
         </v-btn>
       </v-col>
     </v-row>
@@ -36,7 +36,7 @@
         <v-card elevation="2" rounded="lg">
           <v-card-title class="pb-2">
             <v-icon class="text-primary mr-2">mdi-file-clock</v-icon>
-            Status Pemrosesan File
+            File Processing Status
           </v-card-title>
           <v-card-text>
             <div v-if="loadingStatuses" class="text-center py-4">
@@ -44,14 +44,14 @@
                 indeterminate
                 color="primary"
               ></v-progress-circular>
-              <div class="text-caption mt-2">Memuat status file...</div>
+              <div class="text-caption mt-2">Loading file statuses...</div>
             </div>
             <div v-else-if="fileStatuses.length === 0" class="text-center py-4">
               <v-icon size="48" color="grey-lighten-1"
                 >mdi-file-question</v-icon
               >
               <div class="text-subtitle-2 text-grey-darken-1 mt-2">
-                Tidak ada file dalam proses
+                No files in process
               </div>
             </div>
             <v-table v-else density="compact">
@@ -61,13 +61,13 @@
                     Status
                   </th>
                   <th class="text-left font-weight-bold text-grey-darken-3">
-                    Nama Pengguna
+                    Username
                   </th>
                   <th class="text-left font-weight-bold text-grey-darken-3">
-                    Progres
+                    Progress
                   </th>
                   <th class="text-left font-weight-bold text-grey-darken-3">
-                    Terakhir Diperbarui
+                    Last Updated
                   </th>
                 </tr>
               </thead>
@@ -195,7 +195,7 @@ export default {
         );
       } catch (error) {
         console.error("Error fetching file status:", error);
-        this.showAlert("Gagal memuat status file", "error");
+        this.showAlert("Failed to load file status", "error");
         // Clear data on error
         this.fileStatuses = [];
       } finally {
@@ -210,16 +210,16 @@ export default {
         const diffMs = now - date;
         const diffMins = Math.floor(diffMs / 60000);
 
-        if (diffMins < 1) return "Baru saja";
-        if (diffMins < 60) return `${diffMins} menit yang lalu`;
+        if (diffMins < 1) return "Just now";
+        if (diffMins < 60) return `${diffMins} minutes ago`;
 
         const diffHours = Math.floor(diffMins / 60);
-        if (diffHours < 24) return `${diffHours} jam yang lalu`;
+        if (diffHours < 24) return `${diffHours} hours ago`;
 
         const diffDays = Math.floor(diffHours / 24);
-        return `${diffDays} hari yang lalu`;
+        return `${diffDays} days ago`;
       } catch (error) {
-        return "Waktu tidak diketahui";
+        return "Unknown time";
       }
     },
 
@@ -235,9 +235,9 @@ export default {
           second: "2-digit",
           timeZoneName: "short",
         };
-        return date.toLocaleString("id-ID", options);
+        return date.toLocaleString("en-US", options);
       } catch (error) {
-        return "Waktu tidak dapat diformat";
+        return "Time cannot be formatted";
       }
     },
 
@@ -252,7 +252,7 @@ export default {
 
         // this.showAlert("Status berhasil diperbarui", "success");
       } catch (error) {
-        this.showAlert("Gagal memperbarui status", "error");
+        this.showAlert("Failed to refresh status", "error");
       } finally {
         this.refreshing = false;
       }
@@ -272,9 +272,9 @@ export default {
         link.click();
         document.body.removeChild(link);
 
-        this.showAlert("Laporan berhasil diunduh", "success");
+        this.showAlert("Report downloaded successfully", "success");
       } catch (error) {
-        this.showAlert("Gagal mengunduh laporan", "error");
+        this.showAlert("Failed to download report", "error");
       } finally {
         this.downloading = false;
       }

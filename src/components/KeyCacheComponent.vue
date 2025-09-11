@@ -8,7 +8,7 @@
           Key Cache Management
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Kelola key cache untuk sistem enkripsi file
+          Manage key cache for the file encryption system
         </p>
       </v-col>
     </v-row>
@@ -21,17 +21,16 @@
         </template>
         <div>
           <p class="mb-2 font-weight-medium text-blue-darken-3">
-            Tentang Key Cache:
+            About Key Cache:
           </p>
           <ul class="ml-4 text-blue-darken-2">
             <li class="mb-1">
-              Key cache digunakan untuk enkripsi/dekripsi file secara offline
+              Key cache is used for offline file encryption/decryption
             </li>
             <li class="mb-1">
-              Hanya user dengan key cache yang valid dapat mengakses file
-              terenkripsi
+              Only users with a valid key cache can access encrypted files
             </li>
-            <li>Key cache memiliki masa berlaku tertentu</li>
+            <li>Key cache has a limited validity period</li>
           </ul>
         </div>
       </v-alert>
@@ -110,14 +109,17 @@ export default {
             window.URL.revokeObjectURL(url);
           }, 100);
 
-          this.showAlert("File ZIP key cache berhasil didownload", "success");
+          this.showAlert(
+            "Key cache ZIP file downloaded successfully",
+            "success"
+          );
         } else {
           throw new Error("No file data received from server");
         }
       } catch (error) {
         console.error("Download error:", error);
         this.showAlert(
-          "Gagal download key cache: " + (error.message || error),
+          "Failed to download key cache: " + (error.message || error),
           "error"
         );
       } finally {

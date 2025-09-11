@@ -11,8 +11,8 @@
             </div>
 
             <div class="welcome-content">
-              <h1 class="welcome-title">Selamat Datang</h1>
-              <p class="welcome-subtitle">Sistem Keamanan Transfer File</p>
+              <h1 class="welcome-title">Welcome</h1>
+              <p class="welcome-subtitle">Secure File Transfer System</p>
             </div>
 
             <div class="bottom-text">
@@ -32,7 +32,7 @@
             <!-- Login Form -->
             <div class="form-content">
               <div class="form-title-section">
-                <p class="welcome-text">Kami menjaga semuanya</p>
+                <p class="welcome-text">We keep everything secure</p>
                 <h1 class="main-title">Login</h1>
               </div>
 
@@ -41,7 +41,7 @@
                 <div class="form-field">
                   <v-text-field
                     v-model="form.username"
-                    label="Nama Pengguna"
+                    label="Username"
                     variant="outlined"
                     rounded="xl"
                     density="comfortable"
@@ -56,7 +56,7 @@
                   <v-text-field
                     v-model="form.password"
                     :type="showPassword ? 'text' : 'password'"
-                    label="Kata Sandi"
+                    label="Password"
                     variant="outlined"
                     rounded="xl"
                     density="comfortable"
@@ -81,7 +81,7 @@
                     :loading="loading"
                     class="login-btn"
                   >
-                    Masuk
+                    Login
                   </v-btn>
                 </div>
               </v-form>
@@ -175,12 +175,12 @@ export default {
       resetLoading: false,
       // Form validation rules
       usernameRules: [
-        (v) => !!v || "Nama pengguna wajib diisi",
-        (v) => v.length >= 3 || "Nama pengguna minimal 3 karakter",
+        (v) => !!v || "Username is required",
+        (v) => v.length >= 3 || "Username minimum 3 characters",
       ],
       passwordRules: [
-        (v) => !!v || "Kata sandi wajib diisi",
-        (v) => v.length >= 4 || "Kata sandi minimal 4 karakter",
+        (v) => !!v || "Password is required",
+        (v) => v.length >= 4 || "Password minimum 4 characters",
       ],
     };
   },
@@ -204,13 +204,13 @@ export default {
 
       // Basic validation
       if (!this.form.username) {
-        this.errors.username = ["Nama pengguna wajib diisi"];
-        this.showAlert("Nama pengguna wajib diisi", "error");
+        this.errors.username = ["Username is required"];
+        this.showAlert("Username is required", "error");
         return;
       }
       if (!this.form.password) {
-        this.errors.password = ["Kata sandi wajib diisi"];
-        this.showAlert("Kata sandi wajib diisi", "error");
+        this.errors.password = ["Password is required"];
+        this.showAlert("Password is required", "error");
         return;
       }
 
@@ -317,7 +317,7 @@ export default {
     // Forgot password handler
     async handleForgotPassword() {
       if (!this.resetEmail) {
-        this.showAlert("Email wajib diisi", "error");
+        this.showAlert("Email is required", "error");
         return;
       }
 
@@ -335,7 +335,7 @@ export default {
         this.showForgotPassword = false;
         this.resetEmail = "";
       } catch (error) {
-        this.showAlert("Terjadi kesalahan. Silakan coba lagi.", "error");
+        this.showAlert("An error occurred. Please try again.", "error");
       } finally {
         this.resetLoading = false;
       }
