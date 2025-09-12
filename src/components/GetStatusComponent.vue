@@ -64,7 +64,7 @@
                     Username
                   </th>
                   <th class="text-left font-weight-bold text-grey-darken-3">
-                    Progress
+                    Queue
                   </th>
                   <th class="text-left font-weight-bold text-grey-darken-3">
                     Last Updated
@@ -102,17 +102,29 @@
                   </td>
                   <td>
                     <div class="text-grey-darken-2">
-                      {{ fileStatus.order }} / {{ fileStatus.totalOrder }}
+                      #{{ fileStatus.order }} of {{ fileStatus.totalOrder }}
                     </div>
                     <v-progress-linear
                       :model-value="
-                        (fileStatus.order / fileStatus.totalOrder) * 100
+                        ((fileStatus.totalOrder - fileStatus.order + 1) /
+                          fileStatus.totalOrder) *
+                        100
                       "
-                      :color="getFileStatusColor(fileStatus.status)"
+                      :color="
+                        getQueuePositionColor(
+                          fileStatus.order,
+                          fileStatus.totalOrder
+                        )
+                      "
                       height="4"
                       class="mt-1"
                       rounded
                     ></v-progress-linear>
+                    <div class="text-caption text-grey-darken-1 mt-1">
+                      {{
+                        getQueueText(fileStatus.order, fileStatus.totalOrder)
+                      }}
+                    </div>
                   </td>
                   <td>
                     <v-tooltip>
@@ -302,6 +314,25 @@ export default {
         failed: "mdi-close-circle",
       };
       return icons[status] || "mdi-help-circle";
+    },
+
+    getQueuePositionColor(order, totalOrder) {
+      const percentage = (order / totalOrder) * 100;
+
+      if (percentage <= 25) {
+        return "green-darken-2"; // Top 25% - high priority
+      } else if (percentage <= 50) {
+        return "blue-darken-2"; // Top 50% - medium-high priority
+      } else if (percentage <= 75) {
+        return "orange-darken-2"; // Top 75% - medium priority
+      } else {
+        return "red-darken-2"; // Bottom 25% - low priority
+      }
+    },
+
+    getQueueText(order, totalOrder) {
+      const itemsAhead = order - 1;
+      return `${itemsAhead} items ahead`;
     },
 
     showAlert(message, type = "success") {

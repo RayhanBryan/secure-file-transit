@@ -62,6 +62,15 @@
         <v-divider class="my-2"></v-divider>
 
         <v-list-item
+          prepend-icon="mdi-file-multiple"
+          title="File Management"
+          class="mb-1"
+          rounded="lg"
+          :active="$route.name === 'FileManagement'"
+          @click="$router.push('/filemanagement')"
+        ></v-list-item>
+
+        <v-list-item
           prepend-icon="mdi-download"
           title="Unduh Kode"
           class="mb-1"
@@ -195,6 +204,13 @@ export default {
         "voltage key cache": "mdi-key",
         "Cache Kunci": "mdi-key",
         "cache kunci": "mdi-key",
+
+        Files: "mdi-file-multiple", // File Management
+        files: "mdi-file-multiple",
+        "File Management": "mdi-file-multiple",
+        "file management": "mdi-file-multiple",
+        "Manajemen File": "mdi-file-multiple",
+        "manajemen file": "mdi-file-multiple",
 
         // Static menus
         Configuration: "mdi-cog",

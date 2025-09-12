@@ -157,6 +157,29 @@ class ApiService {
     });
   }
 
+  // Get CSV file with specific usernames
+  async getCsvWithUsernames(usernames) {
+    if (!usernames || usernames.length === 0) {
+      throw new Error("At least one username is required");
+    }
+
+    // Build query string with multiple usernames parameters
+    const queryParams = usernames
+      .map((username) => `usernames=${encodeURIComponent(username)}`)
+      .join("&");
+
+    return this.request(`/file/get-csv-username?${queryParams}`, {
+      method: "GET",
+    });
+  }
+
+  // Get CSV file for all usernames
+  async getCsvAllUsernames() {
+    return this.request("/file/get-csv-all-username", {
+      method: "GET",
+    });
+  }
+
   // Download voltage key cache
   async downloadVoltageKeyCache() {
     const url = `${this.baseURL}/voltage-key-cache/download`;
@@ -243,6 +266,8 @@ export const {
   updateUserProfile,
   getUsers,
   getCsv,
+  getCsvWithUsernames,
+  getCsvAllUsernames,
   deleteUser,
   updateUser,
 } = new ApiService();
