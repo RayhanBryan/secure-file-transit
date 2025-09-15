@@ -5,7 +5,8 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-cog</v-icon>
-          Configuration Management
+          Configuration Management } catch (error) { this.showAlert("Failed to
+          save configuration", "error");
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
           Manage system configuration - view and add new configurations
@@ -79,11 +80,6 @@
                   </v-chip>
                   <span v-else class="text-grey">-</span>
                 </template>
-                <template v-slot:item.sharedSecret="{ item }">
-                  <span class="text-grey font-monospace">
-                    {{ item.sharedSecret ? "••••••••" : "-" }}
-                  </span>
-                </template>
               </v-data-table>
             </div>
 
@@ -150,8 +146,8 @@
               <v-row class="mt-2">
                 <v-col cols="6" md="12">
                   <v-btn
-                    color="grey"
-                    variant="outlined"
+                    color="blue-grey-lighten-1"
+                    variant="elevated"
                     size="large"
                     block
                     @click="resetConfigForm"
@@ -225,12 +221,6 @@ export default {
         { title: "Config ID", key: "configId", sortable: true, width: "120px" },
         { title: "Region", key: "region", sortable: true },
         { title: "Code", key: "code", sortable: true, width: "120px" },
-        {
-          title: "Shared Secret",
-          key: "sharedSecret",
-          sortable: false,
-          width: "150px",
-        },
       ],
     };
   },
@@ -245,8 +235,7 @@ export default {
         return (
           config.configId?.toString().toLowerCase().includes(query) ||
           config.region?.toLowerCase().includes(query) ||
-          config.code?.toLowerCase().includes(query) ||
-          config.sharedSecret?.toLowerCase().includes(query)
+          config.code?.toLowerCase().includes(query)
         );
       });
     },
@@ -260,7 +249,6 @@ export default {
       this.loading = true;
       try {
         const response = await ApiService.getConfig();
-        console.log("Config response:", response);
 
         // Handle array response from API
         if (Array.isArray(response)) {
@@ -276,7 +264,6 @@ export default {
 
         this.showAlert("Configuration loaded successfully", "success");
       } catch (error) {
-        console.error("Error loading config:", error);
         this.showAlert("Failed to load configuration", "error");
         this.configData = null;
       } finally {
@@ -292,9 +279,7 @@ export default {
 
       this.saving = true;
       try {
-        console.log("Sending config payload:", this.newConfig);
         const response = await ApiService.setConfig(this.newConfig);
-        console.log("API Response received:", response);
 
         if (
           response &&
@@ -311,7 +296,6 @@ export default {
           throw new Error(response?.message || "Failed to save configuration");
         }
       } catch (error) {
-        console.error("Error adding config:", error);
         this.showAlert("Failed to add configuration", "error");
       } finally {
         this.saving = false;

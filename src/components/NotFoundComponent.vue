@@ -139,7 +139,7 @@ export default {
 
     reportProblem() {
       // You can customize this to open a support ticket or email
-      const subject = encodeURIComponent("404 Page Issue - BRI Dashboard");
+      const subject = encodeURIComponent("404 Page Issue - Dashboard");
       const body = encodeURIComponent(`I encountered a missing page (404).
 
 Accessed URL: ${window.location.href}
@@ -149,7 +149,7 @@ Browser: ${navigator.userAgent}
 Please assist in resolving this issue.`);
 
       window.open(
-        `mailto:it-support@bri.co.id?subject=${subject}&body=${body}`
+        `mailto:it-support@company.co.id?subject=${subject}&body=${body}`
       );
     },
 

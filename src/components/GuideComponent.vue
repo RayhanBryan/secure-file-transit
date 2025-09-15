@@ -8,7 +8,7 @@
           Secure File Transit - Guide
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
-          Usage guide for Secure File Transit Portal for BRI Pejaten Branch
+          Usage guide for Secure File Transit Portal for Branch Office
         </p>
       </v-col>
     </v-row>
@@ -30,16 +30,15 @@
                 class="text-body-1 text-justify mb-4"
                 style="line-height: 1.8; color: #1e293b"
               >
-                Portal Secure File Transit merupakan sebuah middleware yang
-                dirancang untuk menjamin keamanan transmisi serta mengelola
-                akses terhadap file CSV yang telah terenkripsi. Portal ini
-                dikelola oleh user cabang atau instansi (contoh:
-                <strong>Cabang BRI Pejaten</strong>) untuk melakukan proses
-                decrypt file CSV secara offline menggunakan key yang telah
-                disediakan sebelumnya. Dengan platform ini, file terenkripsi
-                yang diunduh melalui link drive hanya dapat dibuka dan
-                didekripsi oleh user yang memiliki installer decryptor dan
-                key-cache file yang valid.
+                Secure File Transit Portal is a middleware designed to ensure
+                transmission security and manage access to encrypted CSV files.
+                This portal is managed by branch or institutional users
+                (example:
+                <strong>Branch Office</strong>) to perform offline CSV file
+                decryption processes using previously provided keys. With this
+                platform, encrypted files downloaded via drive links can only be
+                opened and decrypted by users who have a valid decryptor
+                installer and key-cache file.
               </p>
             </div>
 
@@ -80,7 +79,7 @@
             <!-- Instructions Section -->
             <div class="mb-4">
               <h3 class="text-h6 font-weight-bold mb-4 text-primary">
-                📋 Langkah-langkah Penggunaan
+                📋 Usage Steps
               </h3>
 
               <v-timeline density="compact" class="custom-timeline">
@@ -111,7 +110,7 @@
             <!-- Important Notes -->
             <div class="mb-4">
               <h3 class="text-h6 font-weight-bold mb-4" style="color: #ea580c">
-                ⚠️ Catatan Penting
+                ⚠️ Important Notes
               </h3>
 
               <v-alert type="warning" variant="tonal" class="mb-4">
@@ -119,18 +118,13 @@
                   <v-icon color="#EA580C">mdi-security</v-icon>
                 </template>
                 <div>
-                  <p class="mb-2 font-weight-medium">Keamanan File:</p>
+                  <p class="mb-2 font-weight-medium">File Security:</p>
                   <ul class="ml-4">
+                    <li>Downloaded CSV files are encrypted for security</li>
                     <li>
-                      File CSV yang diunduh sudah terenkripsi untuk keamanan
+                      Only users with valid installer and key-cache can access
                     </li>
-                    <li>
-                      Hanya user dengan installer dan key-cache yang valid dapat
-                      mengakses
-                    </li>
-                    <li>
-                      Jangan bagikan key-cache kepada pihak yang tidak berwenang
-                    </li>
+                    <li>Do not share key-cache with unauthorized parties</li>
                   </ul>
                 </div>
               </v-alert>
@@ -140,11 +134,11 @@
                   <v-icon color="#0369A1">mdi-information</v-icon>
                 </template>
                 <div>
-                  <p class="mb-2 font-weight-medium">Persyaratan Sistem:</p>
+                  <p class="mb-2 font-weight-medium">System Requirements:</p>
                   <ul class="ml-4">
-                    <li>Installer Decryptor telah diinstall di komputer</li>
-                    <li>Key-cache file yang valid tersimpan di sistem</li>
-                    <li>Koneksi internet untuk mengunduh file dari drive</li>
+                    <li>Decryptor installer must be installed on computer</li>
+                    <li>Valid key-cache file saved in the system</li>
+                    <li>Internet connection to download files from drive</li>
                   </ul>
                 </div>
               </v-alert>
@@ -165,31 +159,31 @@ export default {
         {
           title: "1. Download Installer & Key-Cache",
           description:
-            "Unduh installer decryptor dan key-cache file dari Download Center. Pastikan kedua file tersimpan dengan aman.",
+            "Download the decryptor installer and key-cache file from Download Center. Ensure both files are stored securely.",
           color: "blue",
         },
         {
           title: "2. Install Decryptor",
           description:
-            "Jalankan installer decryptor dan ikuti petunjuk instalasi. Pastikan instalasi berhasil sebelum melanjutkan.",
+            "Run the decryptor installer and follow the installation instructions. Ensure installation is successful before proceeding.",
           color: "green",
         },
         {
           title: "3. Setup Key-Cache",
           description:
-            "Tempatkan key-cache file di lokasi yang ditentukan oleh aplikasi decryptor untuk autentikasi.",
+            "Place the key-cache file in the location specified by the decryptor application for authentication.",
           color: "orange",
         },
         {
-          title: "4. Akses BRIDrive",
+          title: "4. Access Drive",
           description:
-            "Buka halaman BRIDrive dan copy URL folder untuk mengakses file CSV yang terenkripsi.",
+            "Open the Drive page and copy the folder URL to access encrypted CSV files.",
           color: "purple",
         },
         {
           title: "5. Download & Decrypt",
           description:
-            "Download file CSV terenkripsi dari drive, kemudian gunakan decryptor untuk membuka file tersebut.",
+            "Download encrypted CSV files from drive, then use the decryptor to open the files.",
           color: "red",
         },
       ],
@@ -198,14 +192,13 @@ export default {
   methods: {
     downloadUserGuide() {
       // Simulate user guide download
-      console.log("Downloading user guide...");
-      this.$emit("show-notification", "Download User Guide dimulai", "info");
+      this.$emit("show-notification", "User Guide download started", "info");
 
       // You can implement actual download logic here
       // For example, triggering download of a PDF file
       const link = document.createElement("a");
       link.href = "/user-guide.pdf"; // Replace with actual file path
-      link.download = "BRI_Portal_User_Guide.pdf";
+      link.download = "Portal_User_Guide.pdf";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

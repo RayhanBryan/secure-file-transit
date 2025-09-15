@@ -10,7 +10,7 @@
     <v-list-item
       prepend-icon="mdi-transit-connection-variant"
       :title="'Secure File Transit System'"
-      :subtitle="'BRI Management System'"
+      :subtitle="'Management System'"
       nav
       class="px-4 py-3"
       style="color: #64748b"
@@ -23,9 +23,9 @@
       <!-- Always show essential menus for all users -->
       <!-- <v-list-item
         prepend-icon="mdi-folder"
-        title="BRIDrive"
-        :active="$route.name === 'BRIDrive'"
-        @click="$router.push('/bridrive')"
+        title="Drive"
+        :active="$route.name === 'Drive'"
+        @click="$router.push('/drive')"
         class="mb-1 text-orange"
         rounded="lg"
       ></v-list-item> -->
@@ -68,6 +68,15 @@
           rounded="lg"
           :active="$route.name === 'FileManagement'"
           @click="$router.push('/filemanagement')"
+        ></v-list-item>
+
+        <v-list-item
+          prepend-icon="mdi-download-multiple"
+          title="Downloads"
+          class="mb-1"
+          rounded="lg"
+          :active="$route.name === 'Downloads'"
+          @click="$router.push('/downloads')"
         ></v-list-item>
 
         <v-list-item
@@ -140,17 +149,6 @@ export default {
         ); // Must have at least a name or title
       });
 
-      // Debug log to see what menus we have
-      console.log("filteredMenus:", filtered);
-      filtered.forEach((menu, index) => {
-        console.log(`Menu ${index}:`, {
-          name: menu.name,
-          title: menu.title,
-          menuName: menu.name || menu.title,
-          route: menu.route || menu.path,
-        });
-      });
-
       return filtered;
     },
   },
@@ -159,12 +157,8 @@ export default {
     getMenuIcon(menuName) {
       // Return default icon if menuName is null/undefined
       if (!menuName) {
-        console.log("getMenuIcon: menuName is null/undefined");
         return "mdi-menu";
       }
-
-      // Debug log to see what menu name we're getting
-      console.log("getMenuIcon called with:", menuName);
 
       const iconMap = {
         // Admin & User menus berdasarkan API endpoints
@@ -196,14 +190,21 @@ export default {
         "Daftar Pengguna": "mdi-account-group",
         "daftar pengguna": "mdi-account-group",
 
-        "Key Cache": "mdi-key", // /voltage-key-cache/download
-        "key cache": "mdi-key",
-        "Download Key Cache": "mdi-key", // Alternative naming
-        "download key cache": "mdi-key",
-        "Voltage Key Cache": "mdi-key", // Exact API naming
-        "voltage key cache": "mdi-key",
-        "Cache Kunci": "mdi-key",
-        "cache kunci": "mdi-key",
+        "Key Cache": "mdi-download", // /voltage-key-cache/download (deprecated)
+        "key cache": "mdi-download",
+        "Download Key Cache": "mdi-download", // Alternative naming (deprecated)
+        "download key cache": "mdi-download",
+        "Voltage Key Cache": "mdi-download", // Exact API naming (deprecated)
+        "voltage key cache": "mdi-download",
+        "Cache Kunci": "mdi-download",
+        "cache kunci": "mdi-download",
+
+        "Download Agent": "mdi-download", // New name
+        "download agent": "mdi-download",
+        "Agent Download": "mdi-download",
+        "agent download": "mdi-download",
+        "Unduh Agen": "mdi-download",
+        "unduh agen": "mdi-download",
 
         Files: "mdi-file-multiple", // File Management
         files: "mdi-file-multiple",
@@ -211,6 +212,13 @@ export default {
         "file management": "mdi-file-multiple",
         "Manajemen File": "mdi-file-multiple",
         "manajemen file": "mdi-file-multiple",
+
+        Downloads: "mdi-download-multiple", // Downloads menu
+        downloads: "mdi-download-multiple",
+        "Download Menu": "mdi-download-multiple",
+        "download menu": "mdi-download-multiple",
+        Unduhan: "mdi-download-multiple",
+        unduhan: "mdi-download-multiple",
 
         // Static menus
         Configuration: "mdi-cog",
@@ -225,10 +233,10 @@ export default {
         guide: "mdi-book-open",
         Panduan: "mdi-book-open",
         panduan: "mdi-book-open",
-        BRIDrive: "mdi-folder",
-        bridrive: "mdi-folder",
-        "Folder BRIDrive": "mdi-folder",
-        "folder bridrive": "mdi-folder",
+        Drive: "mdi-folder",
+        drive: "mdi-folder",
+        "Folder Drive": "mdi-folder",
+        "folder drive": "mdi-folder",
       };
 
       // Try multiple variations
@@ -239,7 +247,6 @@ export default {
         iconMap[menuName.toLowerCase().replace(/\s+/g, "")] || // Remove spaces and lowercase
         "mdi-menu";
 
-      console.log("Icon found for", menuName, ":", icon);
       return icon;
     },
 

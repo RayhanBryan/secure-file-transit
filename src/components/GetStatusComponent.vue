@@ -29,6 +29,7 @@
         </v-btn>
       </v-col>
     </v-row>
+
     <!-- Detailed Status -->
     <v-row>
       <!-- File Processing Status -->
@@ -39,14 +40,20 @@
             File Processing Status
           </v-card-title>
           <v-card-text>
-            <div v-if="loadingStatuses" class="text-center py-4">
+            <div
+              v-if="loading && fileStatuses.length === 0"
+              class="text-center py-4"
+            >
               <v-progress-circular
                 indeterminate
                 color="primary"
               ></v-progress-circular>
               <div class="text-caption mt-2">Loading file statuses...</div>
             </div>
-            <div v-else-if="fileStatuses.length === 0" class="text-center py-4">
+            <div
+              v-else-if="!loading && fileStatuses.length === 0"
+              class="text-center py-4"
+            >
               <v-icon size="48" color="grey-lighten-1"
                 >mdi-file-question</v-icon
               >
@@ -54,98 +61,78 @@
                 No files in process
               </div>
             </div>
-            <v-table v-else density="compact">
-              <thead>
-                <tr>
-                  <th class="text-left font-weight-bold text-grey-darken-3">
-                    Status
-                  </th>
-                  <th class="text-left font-weight-bold text-grey-darken-3">
-                    Username
-                  </th>
-                  <th class="text-left font-weight-bold text-grey-darken-3">
-                    Queue
-                  </th>
-                  <th class="text-left font-weight-bold text-grey-darken-3">
-                    Last Updated
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="fileStatus in fileStatuses"
-                  :key="fileStatus.statusId"
-                >
-                  <td>
-                    <div class="d-flex align-center">
-                      <v-icon
-                        :color="getFileStatusColor(fileStatus.status)"
-                        class="mr-2"
-                        size="20"
-                      >
-                        {{ getFileStatusIcon(fileStatus.status) }}
-                      </v-icon>
-                      <v-chip
-                        :color="getFileStatusColor(fileStatus.status)"
-                        size="small"
-                        variant="flat"
-                        class="text-white"
-                      >
-                        {{ fileStatus.status }}
-                      </v-chip>
+            <v-data-table-server
+              v-else
+              :headers="headers"
+              :items="fileStatuses"
+              :loading="loading"
+              :items-length="totalItems"
+              :items-per-page="itemsPerPage"
+              :items-per-page-options="[5, 10, 25, 50]"
+              item-key="statusId"
+              class="elevation-1"
+              density="compact"
+              @update:options="loadItems"
+            >
+              <template v-slot:item.status="{ item }">
+                <div class="d-flex align-center">
+                  <v-icon
+                    :color="getFileStatusColor(item.status)"
+                    class="mr-2"
+                    size="20"
+                  >
+                    {{ getFileStatusIcon(item.status) }}
+                  </v-icon>
+                  <v-chip
+                    :color="getFileStatusColor(item.status)"
+                    size="small"
+                    variant="flat"
+                    class="text-white"
+                  >
+                    {{ item.status }}
+                  </v-chip>
+                </div>
+              </template>
+
+              <template v-slot:item.username="{ item }">
+                <div class="font-weight-medium text-grey-darken-3">
+                  {{ item.username }}
+                </div>
+              </template>
+
+              <template v-slot:item.queue="{ item }">
+                <div class="text-grey-darken-2">
+                  #{{ item.order }} of {{ item.totalOrder }}
+                </div>
+                <v-progress-linear
+                  :model-value="
+                    ((item.totalOrder - item.order + 1) / item.totalOrder) * 100
+                  "
+                  :color="getQueuePositionColor(item.order, item.totalOrder)"
+                  height="4"
+                  class="mt-1"
+                  rounded
+                ></v-progress-linear>
+                <div class="text-caption text-grey-darken-1 mt-1">
+                  {{ getQueueText(item.order, item.totalOrder) }}
+                </div>
+              </template>
+
+              <template v-slot:item.lastUpdated="{ item }">
+                <v-tooltip>
+                  <template v-slot:activator="{ props }">
+                    <div
+                      class="text-caption text-grey-darken-2"
+                      v-bind="props"
+                      style="cursor: help; text-decoration: underline dotted"
+                    >
+                      {{ formatTime(item.lastUpdated) }}
                     </div>
-                  </td>
-                  <td>
-                    <div class="font-weight-medium text-grey-darken-3">
-                      {{ fileStatus.username }}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="text-grey-darken-2">
-                      #{{ fileStatus.order }} of {{ fileStatus.totalOrder }}
-                    </div>
-                    <v-progress-linear
-                      :model-value="
-                        ((fileStatus.totalOrder - fileStatus.order + 1) /
-                          fileStatus.totalOrder) *
-                        100
-                      "
-                      :color="
-                        getQueuePositionColor(
-                          fileStatus.order,
-                          fileStatus.totalOrder
-                        )
-                      "
-                      height="4"
-                      class="mt-1"
-                      rounded
-                    ></v-progress-linear>
-                    <div class="text-caption text-grey-darken-1 mt-1">
-                      {{
-                        getQueueText(fileStatus.order, fileStatus.totalOrder)
-                      }}
-                    </div>
-                  </td>
-                  <td>
-                    <v-tooltip>
-                      <template v-slot:activator="{ props }">
-                        <div
-                          class="text-caption text-grey-darken-2"
-                          v-bind="props"
-                          style="
-                            cursor: help;
-                            text-decoration: underline dotted;
-                          "
-                        >
-                          {{ formatTime(fileStatus.lastUpdated) }}
-                        </div>
-                      </template>
-                      <span>{{ formatExactTime(fileStatus.lastUpdated) }}</span>
-                    </v-tooltip>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
+                  </template>
+                  <span>{{ formatExactTime(item.lastUpdated) }}</span>
+                </v-tooltip>
+              </template>
+            </v-data-table-server>
           </v-card-text>
         </v-card>
       </v-col>
@@ -173,45 +160,90 @@ export default {
   data() {
     return {
       refreshing: false,
-      downloading: false,
       alertMessage: "",
       alertType: "success",
-      fileStatuses: [], // Data from API
-      loadingStatuses: false,
+      fileStatuses: [],
+      loading: false,
+      totalItems: 0,
+      itemsPerPage: 10,
+      headers: [
+        {
+          title: "Status",
+          key: "status",
+          sortable: true,
+          width: "150px",
+        },
+        {
+          title: "Username",
+          key: "username",
+          sortable: true,
+          width: "150px",
+        },
+        {
+          title: "Queue",
+          key: "queue",
+          sortable: false,
+          width: "200px",
+        },
+        {
+          title: "Last Updated",
+          key: "lastUpdated",
+          sortable: true,
+          width: "150px",
+        },
+      ],
     };
   },
+  mounted() {
+    this.loadItems({ page: 1, itemsPerPage: this.itemsPerPage });
+  },
   methods: {
-    async fetchFileStatus() {
-      this.loadingStatuses = true;
+    async loadItems({ page, itemsPerPage }) {
+      this.loading = true;
       try {
-        console.log("Fetching file status...");
-        const response = await ApiService.getFileStatus(20, 0);
-        console.log("File status response:", response);
+        const offset = (page - 1) * itemsPerPage;
 
-        // Handle response based on actual API structure
-        this.fileStatuses = Array.isArray(response)
-          ? response
-          : response.data || [];
+        const response = await ApiService.getFileStatus(itemsPerPage, offset);
 
-        // Sort fileStatuses by lastUpdated (newest to oldest)
-        this.fileStatuses.sort((a, b) => {
-          const dateA = new Date(a.lastUpdated);
-          const dateB = new Date(b.lastUpdated);
-          return dateB - dateA; // Descending order (newest first)
-        });
+        if (response?.data && Array.isArray(response.data)) {
+          this.fileStatuses = response.data;
+          this.totalItems = response.totalData || response.total || 0;
+        } else if (Array.isArray(response)) {
+          this.fileStatuses = response;
+          this.totalItems = response.length;
+        } else {
+          this.fileStatuses = [];
+          this.totalItems = 0;
+        }
 
-        console.log(
-          "File status loaded successfully:",
-          this.fileStatuses.length,
-          "items"
-        );
+        // Sort by lastUpdated if available
+        if (this.fileStatuses.length > 0 && this.fileStatuses[0]?.lastUpdated) {
+          this.fileStatuses.sort(
+            (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
+          );
+        }
       } catch (error) {
-        console.error("Error fetching file status:", error);
         this.showAlert("Failed to load file status", "error");
-        // Clear data on error
         this.fileStatuses = [];
+        this.totalItems = 0;
       } finally {
-        this.loadingStatuses = false;
+        this.loading = false;
+      }
+    },
+
+    async refreshStatus() {
+      this.refreshing = true;
+      try {
+        // Trigger a refresh by calling loadItems with current pagination
+        await this.loadItems({
+          page: 1,
+          itemsPerPage: this.itemsPerPage,
+        });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        this.showAlert("Failed to refresh status", "error");
+      } finally {
+        this.refreshing = false;
       }
     },
 
@@ -253,45 +285,6 @@ export default {
       }
     },
 
-    async refreshStatus() {
-      this.refreshing = true;
-      try {
-        // Refresh file status data
-        await this.fetchFileStatus();
-
-        // Simulate API call to refresh other status
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // this.showAlert("Status berhasil diperbarui", "success");
-      } catch (error) {
-        this.showAlert("Failed to refresh status", "error");
-      } finally {
-        this.refreshing = false;
-      }
-    },
-
-    async downloadReport() {
-      this.downloading = true;
-      try {
-        // Simulate report generation and download
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        // Create download link
-        const link = document.createElement("a");
-        link.href = "#"; // Replace with actual download URL
-        link.download = "status-report.pdf";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        this.showAlert("Report downloaded successfully", "success");
-      } catch (error) {
-        this.showAlert("Failed to download report", "error");
-      } finally {
-        this.downloading = false;
-      }
-    },
-
     getFileStatusColor(status) {
       const colors = {
         uploading: "blue-darken-2",
@@ -320,13 +313,13 @@ export default {
       const percentage = (order / totalOrder) * 100;
 
       if (percentage <= 25) {
-        return "green-darken-2"; // Top 25% - high priority
+        return "green-darken-2";
       } else if (percentage <= 50) {
-        return "blue-darken-2"; // Top 50% - medium-high priority
+        return "blue-darken-2";
       } else if (percentage <= 75) {
-        return "orange-darken-2"; // Top 75% - medium priority
+        return "orange-darken-2";
       } else {
-        return "red-darken-2"; // Bottom 25% - low priority
+        return "red-darken-2";
       }
     },
 
@@ -338,37 +331,15 @@ export default {
     showAlert(message, type = "success") {
       this.alertMessage = message;
       this.alertType = type;
-
-      // Auto hide after 5 seconds
       setTimeout(() => {
         this.alertMessage = "";
       }, 5000);
     },
   },
-  mounted() {
-    // Fetch initial file status data
-    this.fetchFileStatus();
-
-    // Auto refresh status every 30 seconds
-    // this.statusInterval = setInterval(() => {
-    //   // Auto refresh file status
-    //   this.fetchFileStatus();
-    //   console.log("Auto refreshing status...");
-    // }, 30000);
-  },
-  beforeUnmount() {
-    if (this.statusInterval) {
-      clearInterval(this.statusInterval);
-    }
-  },
 };
 </script>
 
 <style scoped>
-.gap-3 {
-  gap: 12px;
-}
-
 /* Custom card styling for better contrast */
 .success-card {
   background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);

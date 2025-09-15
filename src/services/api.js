@@ -39,12 +39,7 @@ class ApiService {
     try {
       const response = await fetch(url, config);
 
-      // Debug: Log response details
-      console.log("API Response Status:", response.status);
-      console.log("API Response OK:", response.ok);
-
       const data = await response.json();
-      console.log("API Response Data:", data);
 
       // For successful responses (200-299), return data even if response.ok might be false in some cases
       if (response.status >= 200 && response.status < 300) {
@@ -60,7 +55,6 @@ class ApiService {
 
       return data;
     } catch (error) {
-      console.error("API Request Error:", error);
       throw error;
     }
   }
@@ -213,7 +207,40 @@ class ApiService {
           this.getFilenameFromResponse(response) || "voltage-key-cache.zip",
       };
     } catch (error) {
-      console.error("Download API Error:", error);
+      throw error;
+    }
+  }
+
+  // Download installer agent
+  async downloadInstallerAgent() {
+    const url = `${this.baseURL}/voltage-key-cache/installer/download`;
+    const token = this.getAuthToken();
+
+    const config = {
+      method: "GET",
+      headers: {
+        Accept: "application/octet-stream, */*",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    };
+
+    try {
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Get the blob
+      const blob = await response.blob();
+
+      return {
+        success: true,
+        data: blob,
+        filename:
+          this.getFilenameFromResponse(response) || "installer-agent.exe",
+      };
+    } catch (error) {
       throw error;
     }
   }
@@ -262,6 +289,7 @@ export const {
   getFileStatus,
   uploadFile,
   downloadFile,
+  downloadInstallerAgent,
   getUserProfile,
   updateUserProfile,
   getUsers,

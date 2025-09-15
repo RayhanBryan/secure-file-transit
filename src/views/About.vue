@@ -14,7 +14,7 @@
           >
             <v-icon size="80" class="mb-4 text-shadow">mdi-bank</v-icon>
             <h1 class="text-h3 font-weight-bold text-shadow mb-3">
-              Dashboard Cabang BRI
+              Branch Dashboard
             </h1>
             <p class="text-h6 text-shadow opacity-90 max-width-600">
               Solusi digital modern untuk mengelola operasional cabang dengan
@@ -122,7 +122,7 @@
             <v-row>
               <v-col cols="12" md="8" class="mx-auto">
                 <p class="text-h6 text-center mb-4 font-weight-medium">
-                  Dashboard Cabang BRI
+                  Branch Dashboard
                 </p>
                 <p class="text-body-1 text-center mb-6 text-grey-darken-1">
                   Aplikasi ini dibangun menggunakan teknologi modern untuk
@@ -162,7 +162,7 @@
         <div class="gradient-primary text-center pa-4 mt-0">
           <div class="text-white text-shadow">
             <v-icon class="mr-2">mdi-copyright</v-icon>
-            {{ new Date().getFullYear() }} - Dashboard Cabang BRI.
+            {{ new Date().getFullYear() }} - Branch Dashboard.
             <span class="ml-1 font-weight-medium">
               Built with Vue 3 + Vuetify 3
             </span>

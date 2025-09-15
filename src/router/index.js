@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginComponent from "../components/LoginComponent.vue";
 import GuideComponent from "../components/GuideComponent.vue";
 import GetConfigComponent from "../components/GetConfigComponent.vue";
-import KeyCacheComponent from "../components/KeyCacheComponent.vue";
+import DownloadAgentComponent from "../components/DownloadAgentComponent.vue";
 import FileManagementComponent from "../components/FileManagementComponent.vue";
 import GetStatusComponent from "../components/GetStatusComponent.vue";
 import GetUsersComponent from "../components/GetUsersComponent.vue";
@@ -32,9 +32,9 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/get-key-cache",
-    name: "KeyCache",
-    component: KeyCacheComponent,
+    path: "/downloads",
+    name: "DownloadAgent",
+    component: DownloadAgentComponent,
     meta: { requiresAuth: true },
   },
   {

@@ -20,13 +20,16 @@
     <!-- Main Content -->
     <v-main>
       <v-container fluid class="pa-0">
-        <transition name="fade" mode="out-in">
-          <router-view
-            @login="handleLogin"
-            @navigate="handleNavigate"
-            @show-notification="showNotification"
-          />
-        </transition>
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component
+              :is="Component"
+              @login="handleLogin"
+              @navigate="handleNavigate"
+              @show-notification="showNotification"
+            />
+          </transition>
+        </router-view>
       </v-container>
     </v-main>
 

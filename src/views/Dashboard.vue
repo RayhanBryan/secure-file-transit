@@ -18,7 +18,7 @@
                       Selamat datang, {{ user?.name || "User" }}!
                     </h1>
                     <p class="text-h6 text-shadow opacity-90 mb-0">
-                      {{ user?.branch || "Dashboard Cabang BRI" }}
+                      {{ user?.branch || "Branch Dashboard" }}
                     </p>
                   </div>
                 </div>
@@ -55,10 +55,10 @@
         <v-card class="text-center py-8" elevation="2" color="primary" dark>
           <v-card-title class="text-h3 font-weight-bold mb-2">
             <v-icon left size="48" class="mr-4">mdi-view-dashboard</v-icon>
-            Dashboard Cabang BRI
+            Branch Dashboard
           </v-card-title>
           <v-card-subtitle class="text-h6 opacity-90">
-            Sistem Manajemen Dashboard untuk Cabang BRI
+            Sistem Manajemen Dashboard untuk Branch Office
           </v-card-subtitle>
         </v-card>
       </v-col>

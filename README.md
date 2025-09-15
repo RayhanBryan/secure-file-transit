@@ -1,6 +1,6 @@
-# Secure File Transit - Dashboard Cabang BRI
+# Secure File Transit - Branch Dashboard
 
-Aplikasi Vue 3 modern untuk Portal Secure File Transit dengan sistem BRIDrive dan Download Center, dibangun menggunakan Vite dan Vuetify 3 untuk manajemen keamanan transmisi file.
+Aplikasi Vue 3 modern untuk Portal Secure File Transit dengan sistem Drive dan Download Center, dibangun menggunakan Vite dan Vuetify 3 untuk manajemen keamanan transmisi file.
 
 ## 🚀 Teknologi yang Digunakan
 
@@ -51,7 +51,7 @@ src/
 │   ├── HeaderComponent.vue    # Header dengan navigation dan user controls
 │   ├── DrawerComponent.vue    # Side navigation drawer
 │   ├── FooterComponent.vue    # Footer aplikasi
-│   ├── BRIDriveComponent.vue  # Komponen utama BRIDrive file management
+│   ├── DriveComponent.vue      # Komponen utama Drive file management
 │   ├── DownloadCodeComponent.vue # Download center untuk installer
 │   └── LoginComponent.vue     # Halaman login
 ├── router/             # Konfigurasi Vue Router
@@ -70,8 +70,8 @@ src/
 ### 🏦 Secure File Transit System
 
 - 🔐 **Secure File Management** - Portal middleware untuk keamanan transmisi file
-- 📁 **File Management System** - Manajemen file terenkripsi untuk Cabang BRI Pejaten
-- 🔗 **URL Folder BRIDrive** - Akses cepat ke Google Drive folder terenkripsi
+- 📁 **File Management System** - Manajemen file terenkripsi untuk Branch Office
+- 🔗 **URL Folder Drive** - Akses cepat ke Google Drive folder terenkripsi
 - 📋 **Copy to Clipboard** - Copy URL dengan satu klik
 - 🔍 **File Search** - Pencarian file dengan real-time filtering
 - 📊 **File Grid View** - Tampilan grid yang responsive untuk daftar file
@@ -129,7 +129,7 @@ Project ini telah dikonfigurasi dengan:
 ### Halaman Utama
 
 - **Login** (`/login`) - Halaman autentikasi pengguna
-- **BRIDrive** (`/bridrive`) - File management system utama
+- **Drive** (`/drive`) - File management system utama
 - **Download Code** (`/downloadcode`) - Download center untuk installer
 
 ### Komponen Utama
@@ -137,15 +137,15 @@ Project ini telah dikonfigurasi dengan:
 - **HeaderComponent** - App bar dengan theme toggle dan user menu
 - **DrawerComponent** - Navigation sidebar dengan menu items
 - **FooterComponent** - Footer dengan informasi aplikasi
-- **BRIDriveComponent** - File management interface
+- **DriveComponent** - File management interface
 - **DownloadCodeComponent** - Download center interface
 
 ## 📝 Penggunaan
 
 1. Buka browser dan akses `http://localhost:5173`
 2. Login dengan kredensial yang valid
-3. Navigasi ke **BRIDrive** untuk file management:
-   - Copy URL folder BRIDrive
+3. Navigasi ke **Drive** untuk file management:
+   - Copy URL folder Drive
    - Search dan filter file
    - Select file untuk preview
 4. Akses **Download Center** untuk download installer:
@@ -169,4 +169,4 @@ Project ini menggunakan license MIT.
 
 ## 🏢 Developer
 
-Developed by BRI IT Team untuk keperluan Portal Secure File Transit pada manajemen cabang.
+Developed by IT Team untuk keperluan Portal Secure File Transit pada manajemen cabang.

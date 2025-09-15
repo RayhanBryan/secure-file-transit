@@ -2,7 +2,7 @@
   "name": "secure-file-transit",
   "private": true,
   "version": "1.0.0",
-  "description": "Portal Secure File Transit - BRI Management System untuk keamanan transmisi file",
+  "description": "Portal Secure File Transit - Management System untuk keamanan transmisi file",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -223,9 +223,6 @@ export default {
           password: this.form.password,
         });
 
-        // Debug: Log the actual response structure
-        console.log("API Response:", response);
-
         // Check if login is successful - more flexible checking
         const isSuccessful =
           response &&
@@ -241,8 +238,6 @@ export default {
               !response.message?.includes("error")));
 
         if (isSuccessful) {
-          console.log("Login successful, processing response...");
-
           // Store token if provided
           const token =
             response.token || response.data?.token || response.accessToken;
@@ -267,12 +262,11 @@ export default {
               userData.branch ||
               userData.office ||
               userData.department ||
-              "Cabang BRI",
+              "Branch Office",
             token: token,
             menus: Array.isArray(response.menus) ? response.menus : [], // Ensure menus is always an array
           });
         } else {
-          console.log("Login failed, showing error...");
           this.showAlert(
             response?.message ||
               response?.error ||
@@ -281,7 +275,6 @@ export default {
           );
         }
       } catch (error) {
-        console.error("Login error:", error);
         // Fallback to demo credentials if API fails
         if (this.form.username === "admin" && this.form.password === "admin") {
           this.$emit("login", {
@@ -297,9 +290,9 @@ export default {
         ) {
           this.$emit("login", {
             username: this.form.username,
-            name: "User BRI",
+            name: "User Admin",
             role: "user",
-            branch: "Cabang Jakarta Selatan",
+            branch: "Branch Jakarta Selatan",
             menus: [], // Add empty menus array
           });
         } else {

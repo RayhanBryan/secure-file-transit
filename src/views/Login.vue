@@ -14,7 +14,7 @@
                 <h1
                   class="text-h4 font-weight-bold text-white text-shadow mb-2"
                 >
-                  Dashboard BRI
+                  Branch Dashboard
                 </h1>
                 <p class="text-subtitle-1 text-white text-shadow opacity-90">
                   Sistem Manajemen Cabang
@@ -134,7 +134,7 @@
                   Butuh Bantuan?
                 </p>
                 <p class="text-caption text-grey-darken-1">
-                  Hubungi IT Support: ext. 1234 atau it-support@bri.co.id
+                  Hubungi IT Support: ext. 1234 atau it-support@company.co.id
                 </p>
               </v-card>
             </div>
@@ -267,9 +267,9 @@ const handleLogin = async () => {
         "user",
         JSON.stringify({
           username: form.username,
-          name: "User BRI",
+          name: "User Admin",
           role: "user",
-          branch: "Cabang Jakarta Selatan",
+          branch: "Branch Jakarta Selatan",
         })
       );
 

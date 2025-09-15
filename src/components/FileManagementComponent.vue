@@ -298,11 +298,20 @@
       <v-col cols="12">
         <v-card elevation="2" rounded="lg">
           <v-card-title class="d-flex justify-space-between align-center pa-4">
-            <div>
+            <div class="d-flex align-center">
               <v-icon class="text-primary mr-2" size="24"
                 >mdi-folder-open</v-icon
               >
-              Available Files
+              <div>
+                <span class="text-h6">Available Files</span>
+                <div class="text-caption text-grey-darken-1">
+                  <span v-if="searchQuery">
+                    Showing {{ filteredFiles.length }} of
+                    {{ files.length }} files
+                  </span>
+                  <span v-else> Total: {{ files.length }} files </span>
+                </div>
+              </div>
             </div>
             <v-btn
               color="primary"
@@ -387,34 +396,6 @@
                 </v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- File Statistics -->
-    <v-row class="mt-4">
-      <v-col cols="12" md="6">
-        <v-card elevation="1" rounded="lg" color="info" variant="tonal">
-          <v-card-text class="text-center pa-4">
-            <v-icon color="info" class="mb-2" size="32"
-              >mdi-file-multiple</v-icon
-            >
-            <p class="text-h6 font-weight-bold mb-1">
-              {{ filteredFiles.length }}
-            </p>
-            <p class="text-body-2 mb-0">
-              {{ searchQuery ? "Filtered Files" : "Total Files" }}
-            </p>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6" v-if="searchQuery">
-        <v-card elevation="1" rounded="lg" color="primary" variant="tonal">
-          <v-card-text class="text-center pa-4">
-            <v-icon color="primary" class="mb-2" size="32">mdi-database</v-icon>
-            <p class="text-h6 font-weight-bold mb-1">{{ files.length }}</p>
-            <p class="text-body-2 mb-0">Total Files</p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -506,7 +487,6 @@ export default {
 
         this.showAlert("Files loaded successfully", "success");
       } catch (error) {
-        console.error("Error loading files:", error);
         this.showAlert("Failed to load files", "error");
 
         // Show empty state on error - no dummy data
@@ -518,26 +498,14 @@ export default {
     },
 
     filterFiles() {
-      console.log("filterFiles called with searchQuery:", this.searchQuery);
-      console.log("Total files:", this.files.length);
-
       if (!this.searchQuery || this.searchQuery.trim() === "") {
         // If no search query, show all files
         this.filteredFiles = [...this.files];
-        console.log(
-          "No search query, showing all files:",
-          this.filteredFiles.length
-        );
       } else {
         // Filter files based on search query (case insensitive)
         const query = this.searchQuery.toLowerCase().trim();
         this.filteredFiles = this.files.filter((file) =>
           file.name.toLowerCase().includes(query)
-        );
-        console.log(
-          `Filtered with query "${query}":`,
-          this.filteredFiles.length,
-          "results"
         );
       }
     },
@@ -547,10 +515,6 @@ export default {
       this.loadingUsers = true;
       try {
         const response = await ApiService.getUsers();
-
-        console.log("Full API response:", response);
-        console.log("Response data:", response?.data);
-        console.log("Response type:", typeof response);
 
         // Handle different possible response structures
         let userData = null;
@@ -573,12 +537,9 @@ export default {
           userData = response.result;
         }
 
-        console.log("Processed userData:", userData);
-
         if (userData && Array.isArray(userData) && userData.length > 0) {
           // Transform users data to have consistent structure
           this.availableUsers = userData.map((user, index) => {
-            console.log(`User ${index}:`, user);
             return {
               username:
                 user.username ||
@@ -590,19 +551,15 @@ export default {
               ...user,
             };
           });
-          console.log("Final availableUsers:", this.availableUsers);
-          this.showAlert(
-            `Loaded ${this.availableUsers.length} users successfully`,
-            "success"
-          );
+          // this.showAlert(
+          //   `Loaded ${this.availableUsers.length} users successfully`,
+          //   "success"
+          // );
         } else {
           this.availableUsers = [];
-          console.log("No users found or invalid response format");
-          console.log("Response structure does not contain user array");
           this.showAlert("No users found in the system", "warning");
         }
       } catch (error) {
-        console.error("Error loading users:", error);
         this.showAlert(
           "Failed to load users: " + (error.message || "Unknown error"),
           "error"
@@ -692,7 +649,6 @@ export default {
           this.loadFiles();
         }, 2000);
       } catch (error) {
-        console.error("Error ordering CSV with usernames:", error);
         this.showAlert("Failed to create username-based CSV order", "error");
         this.orderUsernamesSuccess = false;
       } finally {
@@ -749,7 +705,6 @@ export default {
           this.loadFiles();
         }, 2000);
       } catch (error) {
-        console.error("Error ordering CSV for all usernames:", error);
         this.showAlert("Failed to create all usernames CSV order", "error");
         this.orderAllUsernamesSuccess = false;
       } finally {
@@ -773,7 +728,6 @@ export default {
           this.allUsernamesCopied = false;
         }, 2000);
       } catch (error) {
-        console.error("Failed to copy all usernames status ID:", error);
         this.showAlert("Failed to copy all usernames status ID", "error");
       }
     },
@@ -794,7 +748,6 @@ export default {
           this.usernameCopied = false;
         }, 2000);
       } catch (error) {
-        console.error("Failed to copy username status ID:", error);
         this.showAlert("Failed to copy username status ID", "error");
       }
     },

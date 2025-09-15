@@ -62,7 +62,7 @@
                 color="primary"
                 size="64"
               ></v-progress-circular>
-              <div class="text-subtitle-2 mt-4">Memuat data pengguna...</div>
+              <div class="text-subtitle-2 mt-4">Loading user data...</div>
             </div>
 
             <div
@@ -75,15 +75,15 @@
               <div class="text-h6 text-grey-darken-1 mt-4">
                 {{
                   searchQuery
-                    ? "Tidak ada pengguna yang sesuai dengan pencarian"
-                    : "Belum ada data pengguna"
+                    ? "No users match the search criteria"
+                    : "No user data available"
                 }}
               </div>
               <div class="text-body-2 text-grey-darken-1 mt-2">
                 {{
                   searchQuery
-                    ? "Coba ubah kata kunci pencarian"
-                    : "Data pengguna akan dimuat dari API"
+                    ? "Try changing the search keywords"
+                    : "User data will be loaded from API"
                 }}
               </div>
             </div>
@@ -153,13 +153,13 @@
         <v-card elevation="2" rounded="lg" class="mb-4 add-user-card">
           <v-card-title class="pb-2 d-flex align-center">
             <v-icon class="text-primary mr-2">mdi-account-plus</v-icon>
-            <span>Tambah Pengguna</span>
+            <span>Add User</span>
           </v-card-title>
           <v-card-text class="pt-2">
             <v-form ref="userForm" v-model="formValid">
               <v-text-field
                 v-model="newUser.username"
-                label="Nama Pengguna"
+                label="Username"
                 prepend-inner-icon="mdi-account-circle"
                 variant="outlined"
                 density="comfortable"
@@ -168,7 +168,7 @@
               ></v-text-field>
               <v-text-field
                 v-model="newUser.password"
-                label="Kata Sandi"
+                label="Password"
                 :type="showPassword ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -191,13 +191,13 @@
                 density="comfortable"
                 :loading="loadingConfigs"
                 :disabled="loadingConfigs"
-                :rules="[(v) => !!v || 'Config ID harus dipilih']"
+                :rules="[(v) => !!v || 'Config ID must be selected']"
                 required
               ></v-select>
               <div class="d-flex justify-end mt-2">
                 <v-btn
-                  color="grey"
-                  variant="outlined"
+                  color="blue-grey-lighten-1"
+                  variant="elevated"
                   size="large"
                   class="me-3"
                   @click="resetForm"
@@ -214,7 +214,7 @@
                   :disabled="!formValid"
                 >
                   <v-icon left>mdi-account-plus</v-icon>
-                  Simpan
+                  Save
                 </v-btn>
               </div>
             </v-form>
@@ -225,8 +225,7 @@
         <v-card elevation="1" rounded="lg" variant="tonal" color="info">
           <v-card-text class="py-4 text-caption">
             <v-icon size="18" class="mr-1" color="info">mdi-information</v-icon>
-            Gunakan form ini untuk menambahkan user baru dan tabel di kiri untuk
-            memantau.
+            Use this form to add new users and the table on the left to monitor.
           </v-card-text>
         </v-card>
       </v-col>
@@ -263,70 +262,71 @@ export default {
       newUser: { username: "", password: "", configId: null },
       configOptions: [],
       usernameRules: [
-        (v) => !!v || "Username harus diisi",
-        (v) => (v && v.length >= 3) || "Username minimal 3 karakter",
+        (v) => !!v || "Username is required",
+        (v) => (v && v.length >= 3) || "Username must be at least 3 characters",
         (v) =>
           /^[a-zA-Z0-9_]+$/.test(v) ||
-          "Username hanya boleh huruf, angka, dan underscore",
+          "Username can only contain letters, numbers, and underscores",
       ],
       passwordRules: [
-        (v) => !!v || "Password harus diisi",
-        (v) => (v && v.length >= 6) || "Password minimal 6 karakter",
+        (v) => !!v || "Password is required",
+        (v) => (v && v.length >= 6) || "Password must be at least 6 characters",
       ],
       headers: [
         { title: "", key: "avatar", sortable: false, width: "60px" },
         { title: "ID", key: "id", sortable: true, width: "80px" },
-        { title: "Nama Pengguna", key: "username", sortable: true },
-        { title: "Peran", key: "roles", sortable: true },
+        { title: "Username", key: "username", sortable: true },
+        { title: "Role", key: "roles", sortable: true },
         { title: "Config ID", key: "configId", sortable: true },
-        { title: "Dibuat", key: "createdAt", sortable: true },
+        { title: "Created", key: "createdAt", sortable: true },
       ],
     };
   },
-  async addUser() {
-    if (!this.$refs.userForm.validate()) {
-      this.showAlert("Mohon lengkapi semua field yang diperlukan", "error");
-      return;
-    }
-    this.saving = true;
-    try {
-      const userData = {
-        username: this.newUser.username,
-        password: this.newUser.password,
-        configId: this.newUser.configId,
-      };
-      // Simulate API call (replace with real API later)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      this.showAlert("User berhasil diregistrasi", "success");
-      this.resetForm();
-      // Optionally refresh list
-      this.refreshUsers();
-    } catch (e) {
-      this.showAlert("Gagal meregistrasi user", "error");
-    } finally {
-      this.saving = false;
-    }
-  },
-  resetForm() {
-    this.newUser = { username: "", password: "", configId: null };
-    this.$refs.userForm.resetValidation();
-  },
   methods: {
+    async addUser() {
+      if (!this.$refs.userForm.validate()) {
+        this.showAlert("Please complete all required fields", "error");
+        return;
+      }
+      this.saving = true;
+      try {
+        const userData = {
+          username: this.newUser.username,
+          password: this.newUser.password,
+          configId: this.newUser.configId,
+        };
+        // Simulate API call (replace with real API later)
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        this.showAlert("User successfully registered", "success");
+        this.resetForm();
+        // Optionally refresh list
+        this.refreshUsers();
+      } catch (e) {
+        this.showAlert("Failed to register user", "error");
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    resetForm() {
+      this.newUser = { username: "", password: "", configId: null };
+      this.formValid = false;
+      this.showPassword = false;
+      if (this.$refs.userForm) {
+        this.$refs.userForm.resetValidation();
+        this.$refs.userForm.reset();
+      }
+    },
     async fetchUsers() {
       this.loadingUsers = true;
       try {
-        console.log("Fetching users...");
         const response = await ApiService.getUsers();
-        console.log("Users response:", response);
 
         // Handle response berdasarkan struktur API
         this.users = Array.isArray(response) ? response : response.data || [];
         this.filteredUsers = [...this.users];
-
-        console.log("Users loaded successfully:", this.users.length, "items");
       } catch (error) {
-        console.error("Error fetching users:", error);
-        this.showAlert("Gagal memuat daftar pengguna", "error");
+        this.showAlert("Failed to load user list", "error");
         this.users = [];
         this.filteredUsers = [];
       } finally {
@@ -338,9 +338,9 @@ export default {
       this.refreshing = true;
       try {
         await this.fetchUsers();
-        this.showAlert("Daftar pengguna berhasil diperbarui", "success");
+        this.showAlert("User list successfully updated", "success");
       } catch (error) {
-        this.showAlert("Gagal memperbarui daftar pengguna", "error");
+        this.showAlert("Failed to update user list", "error");
       } finally {
         this.refreshing = false;
       }
@@ -349,9 +349,7 @@ export default {
     async fetchConfigs() {
       this.loadingConfigs = true;
       try {
-        console.log("Fetching configs...");
         const response = await ApiService.getConfig();
-        console.log("Configs response:", response);
 
         // Handle array response from API
         const configs = Array.isArray(response)
@@ -366,18 +364,11 @@ export default {
           value: config.configId,
         }));
 
-        console.log(
-          "Configs loaded successfully:",
-          this.configOptions.length,
-          "items"
-        );
-
         if (this.configOptions.length === 0) {
-          this.showAlert("Tidak ada konfigurasi yang tersedia", "warning");
+          this.showAlert("No configurations available", "warning");
         }
       } catch (error) {
-        console.error("Error fetching configs:", error);
-        this.showAlert("Gagal memuat daftar konfigurasi", "error");
+        this.showAlert("Failed to load configuration list", "error");
         this.configOptions = [];
       } finally {
         this.loadingConfigs = false;
@@ -439,7 +430,7 @@ export default {
           day: "numeric",
         });
       } catch (error) {
-        return "Format tanggal tidak valid";
+        return "Invalid date format";
       }
     },
 
@@ -451,12 +442,12 @@ export default {
         const diffMs = now - date;
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 0) return "Hari ini";
-        if (diffDays === 1) return "Kemarin";
-        if (diffDays < 7) return `${diffDays} hari lalu`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
-        if (diffDays < 365) return `${Math.floor(diffDays / 30)} bulan lalu`;
-        return `${Math.floor(diffDays / 365)} tahun lalu`;
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "Yesterday";
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+        return `${Math.floor(diffDays / 365)} years ago`;
       } catch (error) {
         return "";
       }
