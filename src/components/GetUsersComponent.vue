@@ -237,7 +237,8 @@
 </template>
 
 <script>
-import ApiService from "../services/api.js";
+import UserApiService from "../services/userApi.js";
+import ConfigApiService from "../services/configApi.js";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
@@ -320,7 +321,7 @@ export default {
     async fetchUsers() {
       this.loadingUsers = true;
       try {
-        const response = await ApiService.getUsers();
+        const response = await UserApiService.getUsers();
 
         // Handle response berdasarkan struktur API
         this.users = Array.isArray(response) ? response : response.data || [];
@@ -349,7 +350,7 @@ export default {
     async fetchConfigs() {
       this.loadingConfigs = true;
       try {
-        const response = await ApiService.getConfig();
+        const response = await ConfigApiService.getConfig();
 
         // Handle array response from API
         const configs = Array.isArray(response)

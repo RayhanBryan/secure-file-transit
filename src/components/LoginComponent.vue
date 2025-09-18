@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import ApiService from "../services/api.js";
+import AuthApiService from "../services/authApi.js";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
@@ -218,7 +218,7 @@ export default {
 
       try {
         // Call actual login API using ApiService
-        const response = await ApiService.login({
+        const response = await AuthApiService.login({
           username: this.form.username,
           password: this.form.password,
         });
@@ -242,7 +242,7 @@ export default {
           const token =
             response.token || response.data?.token || response.accessToken;
           if (token) {
-            ApiService.setAuthToken(token);
+            AuthApiService.setAuthToken(token);
           }
 
           // Extract user data from various possible locations

@@ -411,7 +411,9 @@
 </template>
 
 <script>
-import ApiService from "@/services/api";
+import FileApiService from "@/services/fileApi";
+import UserApiService from "@/services/userApi";
+import CsvApiService from "@/services/csvApi";
 import AlertComponent from "@/components/shared/AlertComponent.vue";
 
 export default {
@@ -469,7 +471,7 @@ export default {
       this.loading = true;
       try {
         // Call the new API endpoint to get all file report names
-        const response = await ApiService.getAllFileReportNames();
+        const response = await FileApiService.getAllFileReportNames();
 
         if (response && response.data && Array.isArray(response.data)) {
           // Transform the file names from the API response into file objects
@@ -514,7 +516,7 @@ export default {
     async loadUsers() {
       this.loadingUsers = true;
       try {
-        const response = await ApiService.getUsers();
+        const response = await UserApiService.getUsers();
 
         // Handle different possible response structures
         let userData = null;
@@ -604,7 +606,7 @@ export default {
       this.usernameCopied = false;
 
       try {
-        const response = await ApiService.getCsvWithUsernames(
+        const response = await CsvApiService.getCsvWithUsernames(
           this.selectedUsernames
         );
 
@@ -663,7 +665,7 @@ export default {
       this.allUsernamesCopied = false;
 
       try {
-        const response = await ApiService.getCsvAllUsernames();
+        const response = await CsvApiService.getCsvAllUsernames();
 
         // Extract status ID from response message
         if (response && response.message) {

@@ -187,7 +187,7 @@
 </template>
 
 <script>
-import ApiService from "@/services/api";
+import ConfigApiService from "@/services/configApi";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
@@ -248,7 +248,7 @@ export default {
     async loadConfig() {
       this.loading = true;
       try {
-        const response = await ApiService.getConfig();
+        const response = await ConfigApiService.getConfig();
 
         // Handle array response from API
         if (Array.isArray(response)) {
@@ -279,7 +279,7 @@ export default {
 
       this.saving = true;
       try {
-        const response = await ApiService.setConfig(this.newConfig);
+        const response = await ConfigApiService.setConfig(this.newConfig);
 
         if (
           response &&

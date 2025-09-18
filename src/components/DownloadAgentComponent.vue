@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import ApiService from "@/services/api";
+import DownloadApiService from "@/services/downloadApi";
 import AlertComponent from "./shared/AlertComponent.vue";
 
 export default {
@@ -168,7 +168,7 @@ export default {
       this.downloading = true;
       try {
         // Call actual API endpoint
-        const response = await ApiService.downloadVoltageKeyCache();
+        const response = await DownloadApiService.downloadVoltageKeyCache();
 
         if (response.success && response.data) {
           // Create download link for ZIP file
@@ -202,7 +202,6 @@ export default {
           throw new Error("No file data received from server");
         }
       } catch (error) {
-
         this.showAlert(
           "Failed to download key cache: " + (error.message || error),
           "error"
@@ -216,7 +215,7 @@ export default {
       this.downloadingInstaller = true;
       try {
         // Call API endpoint for installer download
-        const response = await ApiService.downloadInstallerAgent();
+        const response = await DownloadApiService.downloadInstallerAgent();
 
         if (response.success && response.data) {
           // Create download link for installer file
@@ -244,7 +243,6 @@ export default {
           throw new Error("No installer data received from server");
         }
       } catch (error) {
-
         this.showAlert(
           "Failed to download installer: " + (error.message || error),
           "error"

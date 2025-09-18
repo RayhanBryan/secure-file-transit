@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import ApiService from "../services/api.js";
+import FileApiService from "../services/fileApi.js";
 import AlertComponent from "@/components/shared/AlertComponent.vue";
 
 export default {
@@ -203,7 +203,10 @@ export default {
       try {
         const offset = (page - 1) * itemsPerPage;
 
-        const response = await ApiService.getFileStatus(itemsPerPage, offset);
+        const response = await FileApiService.getFileStatus(
+          itemsPerPage,
+          offset
+        );
 
         if (response?.data && Array.isArray(response.data)) {
           this.fileStatuses = response.data;
