@@ -27,6 +27,11 @@
           md="5"
           lg="4"
           class="right-panel d-flex align-center justify-center"
+          :style="{
+            background: $vuetify.display.smAndDown
+              ? 'linear-gradient(135deg, #a7f3d0 0%, #7dd3fc 50%, #bfdbfe 100%)'
+              : 'white',
+          }"
         >
           <div class="login-form-container">
             <!-- Login Form -->
@@ -43,7 +48,6 @@
                     v-model="form.username"
                     label="Username"
                     variant="outlined"
-                    rounded="xl"
                     density="comfortable"
                     :error-messages="errors.username"
                     hide-details="auto"
@@ -58,7 +62,6 @@
                     :type="showPassword ? 'text' : 'password'"
                     label="Password"
                     variant="outlined"
-                    rounded="xl"
                     density="comfortable"
                     :error-messages="errors.password"
                     :append-inner-icon="
@@ -75,11 +78,23 @@
                   <v-btn
                     type="submit"
                     block
-                    color="primary"
+                    :color="$vuetify.display.smAndDown ? '' : 'primary'"
                     size="large"
                     rounded="xl"
                     :loading="loading"
-                    class="login-btn"
+                    :class="
+                      $vuetify.display.smAndDown
+                        ? 'login-btn-mobile'
+                        : 'login-btn'
+                    "
+                    :style="{
+                      background: $vuetify.display.smAndDown
+                        ? 'linear-gradient(45deg, #10b981 0%, #3b82f6 100%) !important'
+                        : '',
+                      color: $vuetify.display.smAndDown
+                        ? 'white !important'
+                        : '',
+                    }"
                   >
                     Login
                   </v-btn>
@@ -418,7 +433,6 @@ export default {
 
 /* Right Panel - Login Form */
 .right-panel {
-  background: white;
   padding: 2rem;
   min-height: 100vh;
 }
@@ -465,7 +479,7 @@ export default {
 
 .custom-input :deep(.v-field) {
   background: #f9fafb;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(.v-field__outline) {
@@ -482,28 +496,28 @@ export default {
   -webkit-text-fill-color: #1f2937 !important;
   transition: background-color 5000s ease-in-out 0s !important;
   background-color: #f9fafb !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(.v-field__input input:-webkit-autofill:hover) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
   background-color: #f9fafb !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(.v-field__input input:-webkit-autofill:focus) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
   background-color: #f9fafb !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(.v-field__input input:-webkit-autofill:active) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
   background-color: #f9fafb !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 /* Additional autofill removal for all browsers */
@@ -512,25 +526,90 @@ export default {
   -webkit-text-fill-color: #1f2937 !important;
   transition: background-color 5000s ease-in-out 0s !important;
   background-color: transparent !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(input:-webkit-autofill:hover) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(input:-webkit-autofill:focus) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
 }
 
 .custom-input :deep(input:-webkit-autofill:active) {
   -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
   -webkit-text-fill-color: #1f2937 !important;
-  border-radius: 2rem !important;
+  border-radius: 2px !important;
+}
+
+/* Responsive auto-fill background for small screens */
+@media (max-width: 960px) {
+  .custom-input :deep(.v-field) {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(.v-field__input input:-webkit-autofill) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(.v-field__input input:-webkit-autofill:hover) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(.v-field__input input:-webkit-autofill:focus) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(.v-field__input input:-webkit-autofill:active) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(input:-webkit-autofill) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(input:-webkit-autofill:hover) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(input:-webkit-autofill:focus) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
+
+  .custom-input :deep(input:-webkit-autofill:active) {
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 2px !important;
+  }
 }
 
 .login-btn {
@@ -545,6 +624,22 @@ export default {
 .login-btn:hover {
   box-shadow: 0 6px 20px rgba(125, 211, 252, 0.4) !important;
   transform: translateY(-1px);
+}
+
+.login-btn-mobile {
+  height: 56px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25) !important;
+  background: linear-gradient(45deg, #10b981 0%, #3b82f6 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.login-btn-mobile:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+  transform: translateY(-1px);
+  background: linear-gradient(45deg, #059669 0%, #2563eb 100%) !important;
 }
 
 .form-options {
@@ -671,7 +766,6 @@ input:-webkit-autofill:active {
   background-color: transparent !important;
   transition: background-color 5000s ease-in-out 0s !important;
   caret-color: #1f2937 !important;
-  border-radius: 2rem !important;
 }
 
 /* Force remove autofill styles */
@@ -683,6 +777,5 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: #1f2937 !important;
   background-color: transparent !important;
   background-image: none !important;
-  border-radius: 2rem !important;
 }
 </style>
