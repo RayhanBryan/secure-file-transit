@@ -105,11 +105,11 @@ export default {
   methods: {
     handleLogin(userData) {
       this.user = userData;
-      localStorage.setItem("user", JSON.stringify(userData));
+      sessionStorage.setItem("user", JSON.stringify(userData));
       this.$router.push("/guide");
     },
     handleLogout() {
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
       this.user = null;
       this.$router.push("/login");
     },
@@ -117,7 +117,7 @@ export default {
       this.$router.push(`/${page}`);
     },
     loadUserData() {
-      const userData = localStorage.getItem("user");
+      const userData = sessionStorage.getItem("user");
       if (userData) {
         this.user = JSON.parse(userData);
       } else {

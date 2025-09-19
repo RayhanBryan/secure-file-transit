@@ -71,7 +71,7 @@ const router = createRouter({
 
 // Navigation guards
 router.beforeEach((to, from, next) => {
-  const userData = localStorage.getItem("user");
+  const userData = sessionStorage.getItem("user");
   const isLoggedIn = userData !== null;
 
   if (to.meta.requiresAuth && !isLoggedIn) {

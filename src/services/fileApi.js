@@ -8,9 +8,9 @@ class FileApiService {
     this.baseURL = "http://20.64.235.232:8087";
   }
 
-  // Get authentication token from localStorage
+  // Get authentication token from sessionStorage
   getAuthToken() {
-    return localStorage.getItem("authToken");
+    return sessionStorage.getItem("authToken");
   }
 
   // Make authenticated HTTP request

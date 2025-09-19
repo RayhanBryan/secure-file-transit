@@ -8,23 +8,23 @@ class AuthApiService {
     this.baseURL = "http://20.64.235.232:8087";
   }
 
-  // Get authentication token from localStorage
+  // Get authentication token from sessionStorage
   getAuthToken() {
-    return localStorage.getItem("authToken");
+    return sessionStorage.getItem("authToken");
   }
 
-  // Set authentication token in localStorage
+  // Set authentication token in sessionStorage
   setAuthToken(token) {
     if (token) {
-      localStorage.setItem("authToken", token);
+      sessionStorage.setItem("authToken", token);
     } else {
-      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
     }
   }
 
   // Clear authentication token
   clearAuthToken() {
-    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
   }
 
   // Check if user is authenticated
