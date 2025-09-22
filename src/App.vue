@@ -51,6 +51,39 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <!-- Inactivity Warning Dialog -->
+    <v-dialog v-model="showInactivityWarning" persistent max-width="400">
+      <v-card>
+        <v-card-title class="text-h6 text-center pa-4">
+          <v-icon color="warning" class="me-2">mdi-clock-alert</v-icon>
+          Session Warning
+        </v-card-title>
+
+        <v-card-text class="text-center">
+          <p class="mb-3">Your session will expire in:</p>
+          <v-chip color="error" size="large" class="ma-2">
+            <v-icon start>mdi-timer</v-icon>
+            {{ warningCountdown }} seconds
+          </v-chip>
+          <p class="mt-3 text-body-2 text-medium-emphasis">
+            Click "Extend Session" to continue or the session will automatically
+            expire.
+          </p>
+        </v-card-text>
+
+        <v-card-actions class="justify-center pa-4">
+          <v-btn
+            color="primary"
+            variant="elevated"
+            @click="extendSession"
+            prepend-icon="mdi-refresh"
+          >
+            Extend Session
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -58,6 +91,7 @@
 import HeaderComponent from "./components/HeaderComponent.vue";
 import DrawerComponent from "./components/DrawerComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
+import authApi from "./services/authApi.js";
 
 export default {
   name: "App",
@@ -74,6 +108,9 @@ export default {
       showSnackbar: false,
       snackbarText: "",
       snackbarColor: "info",
+      showInactivityWarning: false,
+      warningCountdown: 60,
+      warningInterval: null,
     };
   },
   computed: {
@@ -98,6 +135,7 @@ export default {
   },
   created() {
     this.loadUserData();
+    this.setupAutoLogout();
   },
   mounted() {
     this.loadUserData();
@@ -106,11 +144,16 @@ export default {
     handleLogin(userData) {
       this.user = userData;
       sessionStorage.setItem("user", JSON.stringify(userData));
+      // Start activity monitoring after successful login
+      if (authApi.getAuthToken()) {
+        authApi.startActivityMonitoring();
+      }
       this.$router.push("/guide");
     },
     handleLogout() {
       sessionStorage.removeItem("user");
       this.user = null;
+      authApi.stopActivityMonitoring();
       this.$router.push("/login");
     },
     handleNavigate(page) {
@@ -120,6 +163,11 @@ export default {
       const userData = sessionStorage.getItem("user");
       if (userData) {
         this.user = JSON.parse(userData);
+        // Start activity monitoring if user is logged in and has token
+        if (authApi.getAuthToken()) {
+          console.log("User logged in, starting activity monitoring...");
+          authApi.startActivityMonitoring();
+        }
       } else {
         this.user = null;
       }
@@ -128,6 +176,48 @@ export default {
       this.snackbarText = message;
       this.snackbarColor = type;
       this.showSnackbar = true;
+    },
+    setupAutoLogout() {
+      // Setup callbacks for auto logout
+      authApi.setCallbacks(
+        () => this.handleAutoLogout(),
+        () => this.showInactivityWarningDialog()
+      );
+    },
+    handleAutoLogout() {
+      this.showInactivityWarning = false;
+      if (this.warningInterval) {
+        clearInterval(this.warningInterval);
+        this.warningInterval = null;
+      }
+      this.user = null;
+      this.showNotification(
+        "Your session has expired due to inactivity",
+        "warning"
+      );
+      this.handleLogout();
+    },
+    showInactivityWarningDialog() {
+      this.showInactivityWarning = true;
+      this.warningCountdown = 60;
+
+      // Start countdown
+      this.warningInterval = setInterval(() => {
+        console.log(this.warningCountdown);
+        this.warningCountdown--;
+        if (this.warningCountdown <= 0) {
+          this.extendSession(); // This will close the dialog
+        }
+      }, 1000);
+    },
+    extendSession() {
+      this.showInactivityWarning = false;
+      if (this.warningInterval) {
+        clearInterval(this.warningInterval);
+        this.warningInterval = null;
+      }
+      authApi.extendSession();
+      this.showNotification("Session Extended", "success");
     },
   },
 };

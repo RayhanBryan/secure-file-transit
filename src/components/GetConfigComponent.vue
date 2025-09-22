@@ -5,8 +5,7 @@
       <v-col cols="12">
         <h2 class="text-h4 font-weight-bold text-primary mb-2">
           <v-icon left size="large" color="primary">mdi-cog</v-icon>
-          Configuration Management } catch (error) { this.showAlert("Failed to
-          save configuration", "error");
+          Configuration Management
         </h2>
         <p class="text-subtitle-1 text-grey-darken-3">
           Manage system configuration - view and add new configurations
