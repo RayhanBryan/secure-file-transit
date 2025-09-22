@@ -64,6 +64,13 @@ class UserApiService {
       method: "GET",
     });
   }
+
+  async addUser(userData) {
+    return this.request("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(userData),
+    });
+  }
 }
 
 // Export singleton instance

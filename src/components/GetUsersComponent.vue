@@ -97,6 +97,25 @@
               :items-per-page="10"
               :search="searchQuery"
             >
+              <template v-slot:header.configId>
+                <span>Config ID</span>
+                <v-btn
+                  icon
+                  size="x-small"
+                  variant="text"
+                  color="primary"
+                  @click="toggleAllConfigDetails"
+                >
+                  <v-icon size="16">
+                    {{
+                      expandedRows.length === filteredUsers.length &&
+                      filteredUsers.length > 0
+                        ? "mdi-eye-off"
+                        : "mdi-eye"
+                    }}
+                  </v-icon>
+                </v-btn>
+              </template>
               <template v-slot:item.avatar="{ item }">
                 <v-avatar :color="getAvatarColor(item.username)" class="my-2">
                   <span class="text-white font-weight-bold">
@@ -123,16 +142,67 @@
               </template>
 
               <template v-slot:item.configId="{ item }">
-                <v-chip
-                  v-if="item.configId"
-                  color="orange"
-                  size="small"
-                  variant="outlined"
-                  class="font-weight-medium"
-                >
-                  Config {{ item.configId }}
-                </v-chip>
-                <span v-else class="text-grey-darken-1">-</span>
+                <div class="config-cell">
+                  <div class="d-flex align-center mb-1">
+                    <v-chip
+                      color="orange"
+                      size="small"
+                      variant="outlined"
+                      class="font-weight-medium me-2"
+                    >
+                      Config {{ item.configId }}
+                    </v-chip>
+                    <v-btn
+                      icon
+                      size="small"
+                      variant="text"
+                      color="primary"
+                      @click="toggleConfigDetails(item.id, item.configId)"
+                      class="config-view-btn"
+                    >
+                      <v-icon size="18">
+                        {{
+                          expandedRows.includes(item.id)
+                            ? "mdi-eye-off"
+                            : "mdi-eye"
+                        }}
+                      </v-icon>
+                    </v-btn>
+                  </div>
+
+                  <!-- Expanded config details -->
+                  <v-expand-transition>
+                    <div
+                      v-if="expandedRows.includes(item.id)"
+                      class="config-details my-2"
+                    >
+                      <div
+                        v-if="configDetailsCache[item.id]"
+                        class="config-info"
+                      >
+                        <div class="text-caption mb-1">
+                          <v-icon size="12" color="primary" class="me-1"
+                            >mdi-map-marker</v-icon
+                          >
+                          <strong>Region:</strong>
+                          {{ configDetailsCache[item.id].region || "N/A" }}
+                        </div>
+                        <div class="text-caption">
+                          <v-icon size="12" color="primary" class="me-1"
+                            >mdi-code-tags</v-icon
+                          >
+                          <strong>Code:</strong>
+                          {{ configDetailsCache[item.id].code || "N/A" }}
+                        </div>
+                      </div>
+
+                      <div v-else class="text-caption text-error">
+                        <v-icon size="12" class="me-1">mdi-alert-circle</v-icon>
+                        Config details not available
+                      </div>
+                    </div>
+                  </v-expand-transition>
+                </div>
               </template>
 
               <template v-slot:item.createdAt="{ item }">
@@ -220,14 +290,6 @@
             </v-form>
           </v-card-text>
         </v-card>
-
-        <!-- Optional quick info -->
-        <v-card elevation="1" rounded="lg" variant="tonal" color="info">
-          <v-card-text class="py-4 text-caption">
-            <v-icon size="18" class="mr-1" color="info">mdi-information</v-icon>
-            Use this form to add new users and the table on the left to monitor.
-          </v-card-text>
-        </v-card>
       </v-col>
     </v-row>
 
@@ -255,6 +317,10 @@ export default {
       searchQuery: "",
       alertMessage: "",
       alertType: "success",
+      // Config details inline display
+      expandedRows: [], // Array of expanded user IDs
+      configDetailsCache: {}, // Cache for config details
+      allConfigs: [], // Store all config data for details lookup
       // Add user form state
       formValid: false,
       saving: false,
@@ -278,12 +344,45 @@ export default {
         { title: "ID", key: "id", sortable: true, width: "80px" },
         { title: "Username", key: "username", sortable: true },
         { title: "Role", key: "roles", sortable: true },
-        { title: "Config ID", key: "configId", sortable: true },
+        { title: "Config ID", key: "configId", sortable: false },
         { title: "Created", key: "createdAt", sortable: true },
       ],
     };
   },
   methods: {
+    toggleAllConfigDetails() {
+      if (
+        this.expandedRows.length === this.filteredUsers.length &&
+        this.filteredUsers.length > 0
+      ) {
+        // Collapse all
+        this.expandedRows = [];
+      } else {
+        // Expand all
+        this.expandedRows = this.filteredUsers.map((user) => user.id);
+        this.filteredUsers.forEach((user) => {
+          if (!this.configDetailsCache[user.id]) {
+            const foundConfig = this.allConfigs.find(
+              (config) => String(config.configId) === String(user.configId)
+            );
+            if (foundConfig) {
+              this.configDetailsCache[user.id] = {
+                configId: foundConfig.configId,
+                region: foundConfig.region || "N/A",
+                code: foundConfig.code || `CFG${user.configId}`,
+                description:
+                  foundConfig.description ||
+                  foundConfig.region ||
+                  foundConfig.code ||
+                  "No description available",
+                status: foundConfig.status || "active",
+                createdAt: foundConfig.createdAt,
+              };
+            }
+          }
+        });
+      }
+    },
     async addUser() {
       if (!this.$refs.userForm.validate()) {
         this.showAlert("Please complete all required fields", "error");
@@ -296,8 +395,7 @@ export default {
           password: this.newUser.password,
           configId: this.newUser.configId,
         };
-        // Simulate API call (replace with real API later)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await UserApiService.addUser(userData);
         this.showAlert("User successfully registered", "success");
         this.resetForm();
         // Optionally refresh list
@@ -357,12 +455,16 @@ export default {
           ? response
           : response.data || [];
 
+        // Store all configs for details lookup
+        this.allConfigs = configs;
+
         // Transform configs to match v-select format
         this.configOptions = configs.map((config) => ({
           title: `Config ${config.configId} - ${
             config.region || config.code || "No description"
           }`,
           value: config.configId,
+          data: config, // Store full config data
         }));
 
         if (this.configOptions.length === 0) {
@@ -371,6 +473,7 @@ export default {
       } catch (error) {
         this.showAlert("Failed to load configuration list", "error");
         this.configOptions = [];
+        this.allConfigs = [];
       } finally {
         this.loadingConfigs = false;
       }
@@ -463,6 +566,58 @@ export default {
         this.alertMessage = "";
       }, 5000);
     },
+
+    toggleConfigDetails(userId, configId) {
+      console.log("Toggling config details for userId:", userId);
+      console.log("Config ID:", configId);
+      // If already expanded, collapse it
+      console.log(this.expandedRows, userId);
+      if (this.expandedRows.includes(userId)) {
+        this.expandedRows = this.expandedRows.filter((id) => id !== userId);
+        return;
+      }
+
+      // Add to expanded list
+      this.expandedRows.push(userId);
+
+      // If details already cached, don't fetch again
+      if (this.configDetailsCache[userId]) {
+        return;
+      }
+
+      // Debug log untuk pencarian config
+      console.log("Toggle config details:", { userId, configId });
+      console.log(
+        "allConfigs:",
+        this.allConfigs.map((c) => ({
+          configId: c.configId,
+          type: typeof c.configId,
+        }))
+      );
+      console.log("Comparing:", String(configId));
+
+      // Find config dari allConfigs dengan pencocokan string
+      const foundConfig = this.allConfigs.find(
+        (config) => String(config.configId) === String(configId)
+      );
+      console.log("Found config:", foundConfig);
+
+      if (foundConfig) {
+        // Cache the config details using full config data
+        this.configDetailsCache[userId] = {
+          configId: foundConfig.configId,
+          region: foundConfig.region || "N/A",
+          code: foundConfig.code || `CFG${configId}`,
+        };
+      } else {
+        this.showAlert(
+          `Config ID ${configId} not found in loaded configurations`,
+          "warning"
+        );
+        // Remove from expanded list if not found
+        this.expandedRows = this.expandedRows.filter((id) => id !== userId);
+      }
+    },
   },
   mounted() {
     // Fetch initial data
@@ -486,10 +641,6 @@ export default {
   margin-bottom: 12px;
 }
 
-.users-table {
-  max-height: 650px;
-}
-
 .add-user-card {
   position: sticky;
   top: 16px;
@@ -501,5 +652,29 @@ export default {
 
 :deep(.v-input__details) {
   display: none;
+}
+
+.config-view-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.config-view-btn:hover {
+  opacity: 1;
+}
+
+.config-cell {
+  min-width: 200px;
+}
+
+.config-details {
+  background-color: rgba(var(--v-theme-surface-variant), 0.1);
+  border-radius: 6px;
+  padding: 8px;
+  border-left: 3px solid rgb(var(--v-theme-primary));
+}
+
+.config-info .text-caption {
+  line-height: 1.4;
 }
 </style>
